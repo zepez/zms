@@ -12,7 +12,8 @@
   "scripts": {
     "commit": "gitmoji -c",
     "clean": "scripts/clean.sh",
-    "lint": "pnpm turbo lint"
+    "lint": "pnpm turbo lint",
+    "dev": "pnpm turbo dev"
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.5.1",
