@@ -16,7 +16,7 @@ turso db create <name> --enable-extensions
 | `nvm use`                | Uses NVM to load the correct node version |
 | `pnpm install`            | Install dependencies                      |
 | `pnpm lint`               | Lint all `.ts` files                      |
-| `pnpm clean`              | [Remove all generated artifacts](https://github.com/zepez/monorepo/blob/main/scripts/clean.sh)                             |
+| `pnpm clean`              | [Remove all generated artifacts](https://github.com/zepez/zms/blob/main/scripts/clean.sh)                             |
 | `pnpm commit`             | Run `gitmoji` CLI                         |
 | `pnpm dev`                | Start Next.js dev server on port 3000                       |
 | `pnpm db:empty`           | Permanently delete all tables and data from the database                   |
