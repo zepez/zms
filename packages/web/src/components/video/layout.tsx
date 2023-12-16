@@ -1,3 +1,4 @@
+import { useVideoContext } from "~/providers";
 import { cn } from "~/lib";
 
 interface Props {
@@ -6,8 +7,11 @@ interface Props {
 }
 
 export const Layout = (props: Props) => {
+  const { layoutRef } = useVideoContext();
+
   return (
     <div
+      ref={layoutRef}
       className={cn(
         "w-screen h-screen flex items-center justify-center bg-black",
         props.className,

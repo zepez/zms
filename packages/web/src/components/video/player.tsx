@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Hls from "hls.js";
+import { useVideoContext } from "~/providers";
 import { Video } from "~/components";
 import { cn } from "~/lib";
 
@@ -10,7 +11,7 @@ interface Props {
 }
 
 export const Player = (props: Props) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const { videoRef } = useVideoContext();
   const hlsRef = useRef<Hls | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +22,7 @@ export const Player = (props: Props) => {
   };
 
   useEffect(() => {
-    if (!videoRef.current) return;
+    if (!videoRef?.current) return;
 
     const video = videoRef.current;
 
@@ -40,7 +41,7 @@ export const Player = (props: Props) => {
 
       hls.on(Hls.Events.LEVEL_SWITCHED, (event, data) => {
         const level = hls.levels[data.level];
-        console.log(`Level switched: ${level.width}x${level.height}`);
+        console.log(`Resolution changed: ${level.width}x${level.height}`);
       });
     } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
       video.src = props.src;
@@ -74,11 +75,10 @@ export const Player = (props: Props) => {
           <p>Loading...</p>
         </div>
       )}
-      <video
-        ref={videoRef}
-        controls
-        className={cn("w-full h-full", loading && "hidden")}
-      />
+      <div className={cn("relative w-full h-full", loading && "hidden")}>
+        <Video.Controls />
+        <video ref={videoRef} className="w-full h-full" />
+      </div>
     </Video.Layout>
   );
 };
