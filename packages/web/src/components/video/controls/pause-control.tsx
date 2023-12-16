@@ -8,16 +8,9 @@ interface Props {
 }
 
 export const PauseControl = ({ children }: Props) => {
-  const { videoRef } = useVideoContext();
+  const { togglePlayPause } = useVideoContext();
 
-  const togglePause = () => {
-    if (!videoRef?.current) return;
-
-    if (videoRef.current.paused) videoRef.current.play();
-    else videoRef.current.pause();
-  };
-
-  const child = react.cloneElement(children, { onClick: togglePause });
+  const child = react.cloneElement(children, { onClick: togglePlayPause });
 
   return <>{child}</>;
 };

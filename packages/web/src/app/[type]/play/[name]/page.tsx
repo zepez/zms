@@ -9,10 +9,10 @@ export default function Page({ params }: Props) {
   const { type, name } = params;
 
   return (
-    <VideoProvider>
-      <Video.Player
-        src={`http://localhost:3000/api/stream/${type}/_${name}/master.m3u8`}
-      />
+    <VideoProvider
+      src={`http://localhost:3000/api/stream/${type}/_${name}/master.m3u8`}
+    >
+      <Video.Player />
     </VideoProvider>
   );
 }
