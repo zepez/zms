@@ -14,39 +14,45 @@ interface TranscodeOptions {
 }
 
 const transcode = (options: TranscodeOptions) => {
-  const outputDir = `${options.outputPath}/${options.name}`;
-  ensureMediaPath(outputDir);
+  return new Promise((resolve, reject) => {
+    const outputDir = `${options.outputPath}/${options.name}`;
+    ensureMediaPath(outputDir);
 
-  const callback = () => {
     fs.appendFileSync(
       getMediaPath(options.masterPath),
       `#EXT-X-STREAM-INF:BANDWIDTH=${options.bandwidth},RESOLUTION=${options.resolution}\n${options.name}/playlist.m3u8\n`,
     );
 
-    console.log(`${options.name} transcoding finished`);
-  };
+    const callback = () => {
+      console.log(`${options.name} transcoding finished`);
+      resolve(true);
+    };
 
-  ffmpeg(getMediaPath(options.inputPath))
-    .outputOptions([
-      "-profile:v baseline",
-      "-level 3.0",
-      `-s ${options.resolution}`,
-      "-start_number 0",
-      `-hls_time ${options.segmentDuration}`,
-      "-hls_list_size 0",
-      "-f hls",
-    ])
-    .output(getMediaPath(`${outputDir}/playlist.m3u8`))
-    .on("end", callback)
-    .on("error", (err) => console.error("Error:", err))
-    .run();
+    ffmpeg(getMediaPath(options.inputPath))
+      .outputOptions([
+        "-profile:v baseline",
+        "-level 3.0",
+        `-s ${options.resolution}`,
+        "-start_number 0",
+        `-hls_time ${options.segmentDuration}`,
+        "-hls_list_size 0",
+        "-f hls",
+      ])
+      .output(getMediaPath(`${outputDir}/playlist.m3u8`))
+      .on("end", callback)
+      .on("error", (err) => {
+        console.error("Error:", err);
+        reject(err);
+      })
+      .run();
+  });
 };
 
 interface PipelineOptions {
   inputPath: string;
 }
 
-const pipeline = ({ inputPath }: PipelineOptions) => {
+const pipeline = async ({ inputPath }: PipelineOptions) => {
   const baseFileName = path.basename(inputPath);
   const baseDirName = path.dirname(inputPath);
 
@@ -56,7 +62,7 @@ const pipeline = ({ inputPath }: PipelineOptions) => {
   const masterPath = `${outputPath}/master.m3u8`;
   fs.writeFileSync(getMediaPath(masterPath), "#EXTM3U\n");
 
-  transcode({
+  await transcode({
     masterPath,
     inputPath,
     outputPath,
@@ -66,7 +72,7 @@ const pipeline = ({ inputPath }: PipelineOptions) => {
     segmentDuration: 10,
   });
 
-  transcode({
+  await transcode({
     masterPath,
     inputPath,
     outputPath,
@@ -76,7 +82,7 @@ const pipeline = ({ inputPath }: PipelineOptions) => {
     segmentDuration: 10,
   });
 
-  transcode({
+  await transcode({
     masterPath,
     inputPath,
     outputPath,
@@ -87,4 +93,4 @@ const pipeline = ({ inputPath }: PipelineOptions) => {
   });
 };
 
-void pipeline({ inputPath: "movies/the_yard.mp4" });
+void pipeline({ inputPath: "movies/example.webm" });
