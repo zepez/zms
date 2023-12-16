@@ -9,9 +9,12 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.11",
+    "@packages/common": "workspace:*",
     "@packages/config-server": "workspace:*",
     "@packages/db": "workspace:*",
+    "@packages/transcode": "workspace:*",
     "clsx": "^2.0.0",
+    "hls.js": "^1.4.13",
     "lucide-react": "^0.285.0",
     "next": "14.0.4",
     "next-auth": "^4.24.5",
