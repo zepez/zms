@@ -1,6 +1,8 @@
 # Misc
 .DS_Store
 *.pem
+media/*
+!media/.gitkeep
 
 # Logs
 logs

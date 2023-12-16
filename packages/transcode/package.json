@@ -1,0 +1,17 @@
+{
+  "name": "@packages/transcode",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "ESLINT_USE_FLAT_CONFIG=true eslint -c ../../eslint.config.js"
+  },
+  "dependencies": {
+    "@packages/common": "workspace:*",
+    "fluent-ffmpeg": "^2.1.2"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.24",
+    "@types/node": "^18.0.0",
+    "typescript": "^4.8.4"
+  }
+}
