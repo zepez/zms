@@ -66,9 +66,9 @@ const pipeline = async ({ inputPath }: PipelineOptions) => {
     masterPath,
     inputPath,
     outputPath,
-    name: "360p",
-    resolution: "640x360",
-    bandwidth: 800000,
+    name: "480p",
+    resolution: "640x480",
+    bandwidth: 1200000,
     segmentDuration: 10,
   });
 
@@ -91,6 +91,16 @@ const pipeline = async ({ inputPath }: PipelineOptions) => {
     bandwidth: 5000000,
     segmentDuration: 10,
   });
+
+  await transcode({
+    masterPath,
+    inputPath,
+    outputPath,
+    name: "2160p",
+    resolution: "3840x2160",
+    bandwidth: 14000000,
+    segmentDuration: 10,
+  });
 };
 
-void pipeline({ inputPath: "movies/example.webm" });
+void pipeline({ inputPath: "movies/bunny.webm" });

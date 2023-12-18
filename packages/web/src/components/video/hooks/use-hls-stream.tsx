@@ -8,6 +8,10 @@ export const useHlsStream = (
   videoRef: React.RefObject<HTMLVideoElement> | null,
   src: string,
 ) => {
+  const [streamResolution, setStreamResolution] = useState<{
+    width: number;
+    height: number;
+  } | null>(null); // [width, height
   const [streamError, setStreamError] = useState<string | null>(null);
   const [streamLoading, setStreamLoading] = useState(true);
 
@@ -26,9 +30,8 @@ export const useHlsStream = (
   const onLevelSwitched = useCallback(
     (event: Events.LEVEL_SWITCHED, data: LevelSwitchedData) => {
       const level = hlsRef.current?.levels[data.level];
-      if (level) {
-        console.log(`Resolution changed: ${level.width}x${level.height}`);
-      }
+      if (level)
+        setStreamResolution({ width: level.width, height: level.height });
     },
     [hlsRef],
   );
@@ -69,5 +72,5 @@ export const useHlsStream = (
     };
   }, [src, hlsRef, videoRef, onStreamError, onManifestParsed, onLevelSwitched]);
 
-  return { streamLoading, streamError } as const;
+  return { streamResolution, streamLoading, streamError } as const;
 };

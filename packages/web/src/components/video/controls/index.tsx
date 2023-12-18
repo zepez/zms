@@ -11,7 +11,7 @@ import { TimeCodes } from "./time-codes";
 import { Volume } from "./volume";
 
 export const Controls = () => {
-  const { isPlayerActive } = useVideoContext();
+  const { streamResolution, isPlayerActive } = useVideoContext();
 
   return (
     <PauseControl>
@@ -40,7 +40,15 @@ export const Controls = () => {
                 <TimeCodes />
                 <Volume />
               </div>
-              <div>
+              <div className="flex items-center gap-4">
+                <div className=" border-zinc-100 border-2 py-1 px-2 rounded-md text-sm">
+                  1x
+                </div>
+                {streamResolution && (
+                  <div className="bg-zinc-100 text-zinc-900 border-zinc-100 border-2 py-1 px-2 mr-4 rounded-md text-sm">
+                    {streamResolution.height}p
+                  </div>
+                )}
                 <Fullscreen />
               </div>
             </div>

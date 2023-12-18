@@ -41,6 +41,7 @@ interface Context {
   videoBufferPercent: number;
   videoTotalTime: number;
   streamSource: string | null;
+  streamResolution: { width: number; height: number } | null;
   streamLoading: boolean;
   streamError: string | null;
   handleProgressBarDrag: (e: MouseEvent<HTMLDivElement>) => void;
@@ -61,6 +62,7 @@ const VideoContext = createContext<Context>({
   isVideoPaused: true,
   toggleVideoPaused: () => {},
   streamSource: null,
+  streamResolution: null,
   streamLoading: true,
   streamError: null,
   videoCurrentTime: 0,
@@ -98,7 +100,11 @@ export const Provider = ({
     videoTotalTime,
     offsetVideoTime,
   } = useVideoProgress(videoRef);
-  const { streamLoading, streamError } = useHlsStream(hlsRef, videoRef, src);
+  const { streamResolution, streamLoading, streamError } = useHlsStream(
+    hlsRef,
+    videoRef,
+    src,
+  );
 
   // ==============================
   // HANDLE: Scrollbar Dragging
@@ -195,6 +201,7 @@ export const Provider = ({
         videoBufferPercent,
         videoTotalTime,
         streamSource: src,
+        streamResolution,
         streamLoading,
         streamError,
         handleProgressBarDrag,
