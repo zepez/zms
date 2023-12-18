@@ -19,7 +19,7 @@ export const useMouseDown = (ref: React.RefObject<HTMLDivElement>) => {
       element.removeEventListener("mousedown", handleMouseDown);
       element.removeEventListener("mouseup", handleMouseUp);
     };
-  }, []);
+  }, [ref]);
 
   return [isMouseDown, setMouseDown] as const;
 };

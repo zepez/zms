@@ -1,5 +1,6 @@
 "use client";
 
+import { Undo2 } from "lucide-react";
 import { useVideoContext } from "~/components/video/context";
 import { cn } from "~/lib";
 import { Fullscreen } from "./fullscreen";
@@ -20,12 +21,19 @@ export const Controls = () => {
       <div
         className="absolute bottom-0 left-0 z-10 h-full w-full transition-opacity duration-500 ease-in-out"
         style={{
-          backgroundImage: `linear-gradient(0deg, black 1%, transparent)`,
+          backgroundImage: `linear-gradient(0deg, black 0%, black 5%, transparent 55%), linear-gradient(180deg, black 0%, black 5%, transparent 55%)`,
           opacity: isPlayerActive ? 1 : 0,
         }}
       >
         <div className="p-8 flex gap-2 flex-col justify-between items-center h-full">
-          <div />
+          <div className="w-full p-8">
+            <button
+              title="Back to browse"
+              className="text-4xl flex items-center gap-2"
+            >
+              <Undo2 size={60} />
+            </button>
+          </div>
           <PauseIndicator />
           <div
             className={cn(

@@ -87,7 +87,7 @@ export const Progress = () => {
       const percent = calculateVideoPercent(e as unknown as MouseEvent);
       setHoverProgress(percent);
     }, 100),
-    [calculateVideoPercent],
+    [setHoverProgress, calculateVideoPercent],
   );
 
   useEffect(() => {
@@ -103,7 +103,7 @@ export const Progress = () => {
       window.removeEventListener("mousemove", onDragging as any);
       window.removeEventListener("mouseup", stopDragging);
     };
-  }, [startDragging, onDragging, stopDragging]);
+  }, [progressBarRef, startDragging, onDragging, stopDragging]);
 
   return (
     <div

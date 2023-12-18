@@ -44,7 +44,7 @@ export const useHlsStream = (
         height: level.height,
       })),
     );
-  }, [setStreamLoading]);
+  }, [hlsRef, setStreamLoading]);
 
   const onLevelSwitched = useCallback(
     (event: Events.LEVEL_SWITCHED, data: LevelSwitchedData) => {

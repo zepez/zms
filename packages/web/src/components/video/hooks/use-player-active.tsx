@@ -18,6 +18,10 @@ export const usePlayerActive = (
   const [isPlayerActive, setPlayerActive] = useState(true);
   const [isPlayerForcedActive, setPlayerForcedActive] = useState(false);
 
+  const setPlayerInactive = () => {
+    if (!isPlayerForcedActive) setPlayerActive(false);
+  };
+
   const resetPlayerActiveTimer = useCallback(() => {
     clearTimeout(activityTimer.current);
     setPlayerActive(true);
@@ -30,6 +34,7 @@ export const usePlayerActive = (
     if (!playerRef?.current) return;
     const player = playerRef.current;
 
+    player.addEventListener("mouseleave", setPlayerInactive);
     events.forEach((event) =>
       player.addEventListener(event, resetPlayerActiveTimer),
     );
@@ -38,6 +43,7 @@ export const usePlayerActive = (
 
     return () => {
       clearTimeout(activityTimer.current);
+      player.removeEventListener("mouseleave", setPlayerInactive);
       events.forEach((event) =>
         player.removeEventListener(event, resetPlayerActiveTimer),
       );
