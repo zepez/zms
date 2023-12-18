@@ -13,7 +13,7 @@ export const Layout = (props: Props) => {
     <div
       ref={playerRef}
       className={cn(
-        "w-screen h-screen flex items-center justify-center bg-black",
+        "select-none w-screen h-screen flex items-center justify-center bg-black",
         props.className,
       )}
     >

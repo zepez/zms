@@ -1,14 +1,6 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useRef,
-  useEffect,
-  useCallback,
-  type MouseEvent,
-} from "react";
-import throttle from "lodash.throttle";
+import React, { createContext, useContext, useRef, useEffect } from "react";
 import Hls from "hls.js";
 import {
   useHlsStream,
@@ -19,58 +11,76 @@ import {
   useVideoVolume,
   useVideoProgress,
 } from "./hooks";
+import type { StreamResolution } from "~/components/video/types";
 
 interface Context {
+  // Refs
   videoRef: React.RefObject<HTMLVideoElement> | null;
   playerRef: React.RefObject<HTMLDivElement> | null;
   progressBarRef: React.RefObject<HTMLDivElement> | null;
-
+  // Activity Tracking
   isPlayerActive: boolean;
+  setPlayerForcedActive: (forced: boolean) => void;
+  isProgressBarDragging: boolean;
+  // Fullscreen
   isPlayerFullscreen: boolean;
   togglePlayerFullscreen: () => void;
-  isProgressBarDragging: boolean;
+  // Volume
   videoVolume: number;
   setVideoVolume: (volume: number) => void;
   isVideoMuted: boolean;
   setVideoMuted: (muted: boolean) => void;
+  // Pause
   isVideoPaused: boolean;
   toggleVideoPaused: () => void;
+  // Progress
   videoCurrentTime: number;
   setVideoCurrentTime: (time: number) => void;
   videoCurrentPercent: number;
   videoBufferPercent: number;
   videoTotalTime: number;
+  // Stream
   streamSource: string | null;
-  streamResolution: { width: number; height: number } | null;
+  streamLevel: number;
+  setStreamLevel: (level: number) => void;
+  streamLevels: StreamResolution[];
   streamLoading: boolean;
   streamError: string | null;
-  handleProgressBarDrag: (e: MouseEvent<HTMLDivElement>) => void;
 }
 
 const VideoContext = createContext<Context>({
+  // Refs
   videoRef: null,
   playerRef: null,
   progressBarRef: null,
+  // Activity Tracking
   isPlayerActive: true,
+  setPlayerForcedActive: () => {},
+  isProgressBarDragging: false,
+  // Fullscreen
   isPlayerFullscreen: false,
   togglePlayerFullscreen: () => {},
-  isProgressBarDragging: false,
+  // Volume
   videoVolume: 1,
   setVideoVolume: () => {},
   isVideoMuted: false,
   setVideoMuted: () => {},
+  // Pause
   isVideoPaused: true,
   toggleVideoPaused: () => {},
-  streamSource: null,
-  streamResolution: null,
-  streamLoading: true,
-  streamError: null,
+  // Progress
   videoCurrentTime: 0,
   setVideoCurrentTime: () => {},
   videoCurrentPercent: 0,
   videoBufferPercent: 0,
   videoTotalTime: 0,
-  handleProgressBarDrag: (e: MouseEvent<HTMLDivElement>) => {},
+  // Stream
+  streamSource: null,
+  streamLevel: -1,
+  setStreamLevel: () => {},
+  streamLevels: [],
+  streamLoading: true,
+  streamError: null,
 });
 
 export const Provider = ({
@@ -85,7 +95,7 @@ export const Provider = ({
   const playerRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
 
-  const { isPlayerActive } = usePlayerActive(playerRef);
+  const { isPlayerActive, setPlayerForcedActive } = usePlayerActive(playerRef);
   const { isPlayerFullscreen, togglePlayerFullscreen } =
     usePlayerFullscreen(playerRef);
   const [isProgressBarDragging] = useMouseDown(progressBarRef);
@@ -100,34 +110,13 @@ export const Provider = ({
     videoTotalTime,
     offsetVideoTime,
   } = useVideoProgress(videoRef);
-  const { streamResolution, streamLoading, streamError } = useHlsStream(
-    hlsRef,
-    videoRef,
-    src,
-  );
-
-  // ==============================
-  // HANDLE: Scrollbar Dragging
-  // ==============================
-  const handleProgressBarDrag = throttle(
-    useCallback(
-      (e: MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!videoRef?.current || !progressBarRef?.current) return;
-        const video = videoRef.current;
-        const progressBar = progressBarRef.current;
-
-        const rect = progressBar.getBoundingClientRect();
-        const percent = (e.clientX - rect.left) / rect.width;
-
-        video.currentTime = percent * video.duration;
-      },
-      [videoRef, progressBarRef],
-    ),
-    100,
-  );
+  const {
+    streamLevel,
+    setStreamLevel,
+    streamLevels,
+    streamLoading,
+    streamError,
+  } = useHlsStream(hlsRef, videoRef, src);
 
   // ==============================
   // Shortcuts
@@ -182,29 +171,38 @@ export const Provider = ({
   return (
     <VideoContext.Provider
       value={{
+        // Refs
         videoRef,
         playerRef,
         progressBarRef,
+        // Activity Tracking
         isPlayerActive,
+        setPlayerForcedActive,
+        isProgressBarDragging,
+        // Fullscreen
         isPlayerFullscreen,
         togglePlayerFullscreen,
-        isProgressBarDragging,
+        // Volume
         videoVolume,
         setVideoVolume,
         isVideoMuted,
         setVideoMuted,
+        // Pause
         isVideoPaused,
         toggleVideoPaused,
+        // Progress
         videoCurrentTime,
         setVideoCurrentTime,
         videoCurrentPercent,
         videoBufferPercent,
         videoTotalTime,
+        // Stream
         streamSource: src,
-        streamResolution,
+        streamLevel,
+        setStreamLevel,
+        streamLevels,
         streamLoading,
         streamError,
-        handleProgressBarDrag,
       }}
     >
       {children}

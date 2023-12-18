@@ -17,6 +17,7 @@ export const Fullscreen = () => {
     <button
       onClick={handleFullscreenClick}
       title={isPlayerFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+      className="ml-4"
     >
       {isPlayerFullscreen ? <Shrink size={30} /> : <Expand size={30} />}
     </button>

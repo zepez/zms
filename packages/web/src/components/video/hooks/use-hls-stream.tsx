@@ -2,18 +2,27 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Hls, { type LevelSwitchedData, type Events } from "hls.js";
+import type { StreamResolution } from "~/components/video/types";
 
 export const useHlsStream = (
   hlsRef: React.MutableRefObject<Hls | null>,
   videoRef: React.RefObject<HTMLVideoElement> | null,
   src: string,
 ) => {
-  const [streamResolution, setStreamResolution] = useState<{
-    width: number;
-    height: number;
-  } | null>(null); // [width, height
   const [streamError, setStreamError] = useState<string | null>(null);
   const [streamLoading, setStreamLoading] = useState(true);
+  const [streamLevel, setStreamLevelState] = useState<number>(-1);
+  const [streamLevels, setStreamLevels] = useState<StreamResolution[]>([]);
+
+  const setStreamLevel = useCallback(
+    (level: number) => {
+      const hls = hlsRef.current;
+      if (!hls) return;
+
+      hls.currentLevel = level;
+    },
+    [hlsRef],
+  );
 
   const onStreamError = useCallback(
     (message: string) => {
@@ -25,13 +34,22 @@ export const useHlsStream = (
 
   const onManifestParsed = useCallback(() => {
     setStreamLoading(false);
+
+    const levels = hlsRef.current?.levels;
+    if (!levels) return;
+
+    setStreamLevels(
+      levels.map((level) => ({
+        width: level.width,
+        height: level.height,
+      })),
+    );
   }, [setStreamLoading]);
 
   const onLevelSwitched = useCallback(
     (event: Events.LEVEL_SWITCHED, data: LevelSwitchedData) => {
       const level = hlsRef.current?.levels[data.level];
-      if (level)
-        setStreamResolution({ width: level.width, height: level.height });
+      if (level) setStreamLevelState(data.level);
     },
     [hlsRef],
   );
@@ -72,5 +90,11 @@ export const useHlsStream = (
     };
   }, [src, hlsRef, videoRef, onStreamError, onManifestParsed, onLevelSwitched]);
 
-  return { streamResolution, streamLoading, streamError } as const;
+  return {
+    streamLevel,
+    setStreamLevel,
+    streamLevels,
+    streamLoading,
+    streamError,
+  } as const;
 };

@@ -21,7 +21,9 @@ export const Player = () => {
       )}
       <div className={cn("relative w-full h-full", streamLoading && "hidden")}>
         <Video.Controls />
-        <video ref={videoRef} className="w-full h-full" />
+        <video ref={videoRef} className="w-full h-full">
+          Your browser does not support HLS video.
+        </video>
       </div>
     </Video.Layout>
   );

@@ -3,15 +3,17 @@
 import { useVideoContext } from "~/components/video/context";
 import { cn } from "~/lib";
 import { Fullscreen } from "./fullscreen";
+import { Level } from "./level";
 import { Progress } from "./progress";
 import { PauseControl } from "./pause-control";
 import { PauseIndicator } from "./pause-indicator";
 import { Pause } from "./pause";
+import { Speed } from "./speed";
 import { TimeCodes } from "./time-codes";
 import { Volume } from "./volume";
 
 export const Controls = () => {
-  const { streamResolution, isPlayerActive } = useVideoContext();
+  const { isPlayerActive } = useVideoContext();
 
   return (
     <PauseControl>
@@ -41,14 +43,8 @@ export const Controls = () => {
                 <Volume />
               </div>
               <div className="flex items-center gap-4">
-                <div className=" border-zinc-100 border-2 py-1 px-2 rounded-md text-sm">
-                  1x
-                </div>
-                {streamResolution && (
-                  <div className="bg-zinc-100 text-zinc-900 border-zinc-100 border-2 py-1 px-2 mr-4 rounded-md text-sm">
-                    {streamResolution.height}p
-                  </div>
-                )}
+                <Speed />
+                <Level />
                 <Fullscreen />
               </div>
             </div>

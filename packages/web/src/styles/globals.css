@@ -69,8 +69,8 @@
     right: 0;
     top: 50%;
     transform: translate(50%, -50%);
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     z-index: 10;
   }

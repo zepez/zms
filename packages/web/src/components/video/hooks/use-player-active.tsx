@@ -16,12 +16,15 @@ export const usePlayerActive = (
 ) => {
   const activityTimer = useRef<NodeJS.Timeout>();
   const [isPlayerActive, setPlayerActive] = useState(true);
+  const [isPlayerForcedActive, setPlayerForcedActive] = useState(false);
 
   const resetPlayerActiveTimer = useCallback(() => {
     clearTimeout(activityTimer.current);
     setPlayerActive(true);
-    activityTimer.current = setTimeout(() => setPlayerActive(false), 2000);
-  }, [setPlayerActive]);
+    if (!isPlayerForcedActive) {
+      activityTimer.current = setTimeout(() => setPlayerActive(false), 2000);
+    }
+  }, [isPlayerForcedActive, setPlayerActive]);
 
   useEffect(() => {
     if (!playerRef?.current) return;
@@ -41,5 +44,10 @@ export const usePlayerActive = (
     };
   }, [playerRef, resetPlayerActiveTimer]);
 
-  return { isPlayerActive, setPlayerActive, resetPlayerActiveTimer } as const;
+  return {
+    isPlayerActive,
+    setPlayerActive,
+    setPlayerForcedActive,
+    resetPlayerActiveTimer,
+  } as const;
 };
