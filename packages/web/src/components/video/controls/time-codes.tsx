@@ -1,9 +1,9 @@
 "use client";
 
-import { useVideoContext } from "~/providers";
+import { useVideoContext } from "~/components/video/context";
 
 export const TimeCodes = () => {
-  const { streamCurrentTime, streamTotalTime } = useVideoContext();
+  const { videoCurrentTime, videoTotalTime } = useVideoContext();
 
   const secondsToTimeCode = (seconds: number | null) => {
     if (!seconds) return "00:00:00";
@@ -16,8 +16,8 @@ export const TimeCodes = () => {
 
   return (
     <p className="whitespace-nowrap">
-      {secondsToTimeCode(streamCurrentTime)} /{" "}
-      {secondsToTimeCode(streamTotalTime)}
+      {secondsToTimeCode(videoCurrentTime)} /{" "}
+      {secondsToTimeCode(videoTotalTime)}
     </p>
   );
 };

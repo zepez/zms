@@ -1,17 +1,24 @@
 "use client";
 
 import { Expand, Shrink } from "lucide-react";
-import { useVideoContext } from "~/providers";
+import { useVideoContext } from "~/components/video/context";
 
 export const Fullscreen = () => {
-  const { toggleFullscreen, isFullscreen } = useVideoContext();
+  const { togglePlayerFullscreen, isPlayerFullscreen } = useVideoContext();
+
+  const handleFullscreenClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    togglePlayerFullscreen();
+  };
 
   return (
     <button
-      onClick={toggleFullscreen}
-      title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+      onClick={handleFullscreenClick}
+      title={isPlayerFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
     >
-      {isFullscreen ? <Shrink size={30} /> : <Expand size={30} />}
+      {isPlayerFullscreen ? <Shrink size={30} /> : <Expand size={30} />}
     </button>
   );
 };

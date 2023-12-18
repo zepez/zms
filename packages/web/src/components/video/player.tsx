@@ -1,6 +1,6 @@
 "use client";
 
-import { useVideoContext } from "~/providers";
+import { useVideoContext } from "~/components/video/context";
 import { Video } from "~/components";
 import { cn } from "~/lib";
 

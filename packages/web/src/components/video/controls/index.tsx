@@ -1,6 +1,6 @@
 "use client";
 
-import { useVideoContext } from "~/providers";
+import { useVideoContext } from "~/components/video/context";
 import { cn } from "~/lib";
 import { Fullscreen } from "./fullscreen";
 import { Progress } from "./progress";
@@ -11,7 +11,7 @@ import { TimeCodes } from "./time-codes";
 import { Volume } from "./volume";
 
 export const Controls = () => {
-  const { isActive } = useVideoContext();
+  const { isPlayerActive } = useVideoContext();
 
   return (
     <PauseControl>
@@ -19,7 +19,7 @@ export const Controls = () => {
         className="absolute bottom-0 left-0 z-10 h-full w-full transition-opacity duration-500 ease-in-out"
         style={{
           backgroundImage: `linear-gradient(0deg, black 1%, transparent)`,
-          opacity: isActive ? 1 : 0,
+          opacity: isPlayerActive ? 1 : 0,
         }}
       >
         <div className="p-8 flex gap-2 flex-col justify-between items-center h-full">
@@ -28,7 +28,7 @@ export const Controls = () => {
           <div
             className={cn(
               "w-full transition-opacity duration-500 ease-in-out",
-              isActive ? "opacity-100" : "opacity-0",
+              isPlayerActive ? "opacity-100" : "opacity-0",
             )}
           >
             <Progress />

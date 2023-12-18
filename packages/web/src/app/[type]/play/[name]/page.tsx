@@ -1,4 +1,3 @@
-import { VideoProvider } from "~/providers";
 import { Video } from "~/components";
 
 interface Props {
@@ -9,10 +8,10 @@ export default function Page({ params }: Props) {
   const { type, name } = params;
 
   return (
-    <VideoProvider
+    <Video.Provider
       src={`http://localhost:3000/api/stream/${type}/_${name}/master.m3u8`}
     >
       <Video.Player />
-    </VideoProvider>
+    </Video.Provider>
   );
 }
