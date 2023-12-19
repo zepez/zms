@@ -77,9 +77,10 @@ export const useHlsStream = (
       hlsRef.current = hls;
       hls.loadSource(src);
       hls.attachMedia(media);
-      hls.on(Hls.Events.ERROR, (_, data) =>
-        onStreamError(`${data.type}, ${data.details}`),
-      );
+      hls.on(Hls.Events.ERROR, (_, data) => {
+        if (!data.fatal) return;
+        onStreamError(`${data.type}, ${data.details}`);
+      });
       hls.on(Hls.Events.MANIFEST_PARSED, onManifestParsed);
       hls.on(Hls.Events.LEVEL_SWITCHED, onLevelSwitched);
     } else if (media.canPlayType("application/vnd.apple.mpegurl")) {
