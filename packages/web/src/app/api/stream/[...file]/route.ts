@@ -1,14 +1,14 @@
 import fs from "fs";
 import path from "path";
 import { NextResponse, type NextRequest } from "next/server";
-import { getMediaPath } from "@packages/common";
+import { getDataPath } from "@packages/common";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { file: string[] } },
 ) {
   try {
-    const mediaPath = getMediaPath(params.file.join("/"), { bundle: true });
+    const mediaPath = getDataPath(params.file.join("/"));
     const mediaUrl = new URL(mediaPath, request.nextUrl);
     const extension = path.extname(mediaUrl.pathname);
 

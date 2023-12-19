@@ -1,19 +1,17 @@
 import path from "path";
 import fs from "fs";
+import config from "@packages/config-server";
 
-export const getMediaPath = (
-  relativePath: string,
-  options = { bundle: false },
-): string => {
-  const projectRoot = !options.bundle
+export const getDataPath = (relativePath: string): string => {
+  const projectRoot = !config.NEXT_BUNDLE
     ? path.resolve(__dirname, "../../..")
     : path.resolve(__dirname, "../../../../../../../..");
-  const mediaPath = path.join(projectRoot, "media", relativePath);
+  const dataPath = path.join(projectRoot, "data", relativePath);
 
-  return mediaPath;
+  return dataPath;
 };
 
-export const ensureMediaPath = (filePath: string) => {
-  const mediaPath = getMediaPath(filePath);
-  fs.mkdirSync(mediaPath, { recursive: true });
+export const ensureDataPath = (filePath: string) => {
+  const dataPath = getDataPath(filePath);
+  fs.mkdirSync(dataPath, { recursive: true });
 };

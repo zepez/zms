@@ -4,6 +4,9 @@
 media/*
 !media/.gitkeep
 
+data/*
+!data/.gitkeep
+
 # Logs
 logs
 *.log

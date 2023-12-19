@@ -1,7 +1,7 @@
 const nextConfig = {
   experimental: {
     esmExternals: false,
-    serverComponentsExternalPackages: ["drizzle-orm, @libsql/client, libsql"],
+    serverComponentsExternalPackages: ["drizzle-orm"],
   },
 };
 
