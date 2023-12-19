@@ -56,4 +56,22 @@
   body {
     @apply bg-background text-foreground scroll-smooth;
   }
+  
+  .media-progress-bar {
+    position: relative;
+  }
+  
+  .media-progress-bar::after {
+    @apply bg-green-500;
+
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(50%, -50%);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    z-index: 10;
+  }
 }
