@@ -57,11 +57,11 @@
     @apply bg-background text-foreground scroll-smooth;
   }
   
-  .video-progress-bar {
+  .media-progress-bar {
     position: relative;
   }
   
-  .video-progress-bar::after {
+  .media-progress-bar::after {
     @apply bg-green-500;
 
     content: '';

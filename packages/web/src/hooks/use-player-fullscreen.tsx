@@ -1,8 +1,7 @@
 import { useState, useCallback } from "react";
+import type { PlayerRef } from "~/types";
 
-export const usePlayerFullscreen = (
-  playerRef: React.RefObject<HTMLDivElement> | null,
-) => {
+export const usePlayerFullscreen = (playerRef: PlayerRef) => {
   const [isPlayerFullscreen, setIsPlayerFullscreen] = useState(false);
 
   const setPlayerFullscreen = useCallback(

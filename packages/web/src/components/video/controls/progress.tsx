@@ -1,22 +1,25 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import throttle from "lodash.throttle";
+import { useDrag } from "~/hooks";
 import { useVideoContext } from "~/components/video/context";
 
 export const Progress = () => {
   const {
     progressBarRef,
-    videoTotalTime,
-    setVideoCurrentTime,
-    videoCurrentPercent,
-    videoBufferPercent,
+    mediaTotalTime,
+    setMediaCurrentTime,
+    mediaCurrentPercent,
+    mediaBufferPercent,
+    setStreamLevel,
   } = useVideoContext();
   const [hoverProgress, setHoverProgress] = useState(0);
-  const [isDragging, setDragging] = useState(false);
+  const { isDragging, onDragStart, onDragMove, onDragEnd } =
+    useDrag(progressBarRef);
 
-  const calculateVideoPercent = useCallback(
-    (e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
+  const calculateMediaPercent = useCallback(
+    (e: MouseEvent | React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -32,98 +35,60 @@ export const Progress = () => {
     [progressBarRef],
   );
 
-  const calculateVideoNewTime = useCallback(
-    (percent: number) => {
-      return (percent / 100) * videoTotalTime;
-    },
-    [videoTotalTime],
-  );
-
-  const updateVideoCurrentTime = useCallback(
-    throttle((e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
+  const updateMediaCurrentTimeThrottled = throttle(
+    (e: MouseEvent | React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
-      const percent = calculateVideoPercent(e);
-      const newTime = calculateVideoNewTime(percent);
+      const percent = calculateMediaPercent(e);
+      const newTime = (percent / 100) * mediaTotalTime;
 
-      setVideoCurrentTime(newTime);
-    }, 100),
-    [calculateVideoPercent, calculateVideoNewTime, setVideoCurrentTime],
+      setMediaCurrentTime(newTime);
+    },
+    50,
   );
 
-  const startDragging = useCallback(
-    (e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
+  const updateMediaCurrentTime = useCallback(updateMediaCurrentTimeThrottled, [
+    updateMediaCurrentTimeThrottled,
+  ]);
+
+  const updateMediaHoverTime = throttle(
+    (e: MouseEvent | React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
-      setDragging(true);
-      updateVideoCurrentTime(e);
-    },
-    [updateVideoCurrentTime],
-  );
-
-  const stopDragging = useCallback(() => {
-    setDragging(false);
-  }, []);
-
-  const onDragging = useCallback(
-    (e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
-      if (isDragging) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        updateVideoCurrentTime(e);
-      }
-    },
-    [isDragging, updateVideoCurrentTime],
-  );
-
-  const updateVideoHoverTime = useCallback(
-    throttle((e: MouseEvent | React.MouseEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const percent = calculateVideoPercent(e as unknown as MouseEvent);
+      const percent = calculateMediaPercent(e);
       setHoverProgress(percent);
-    }, 100),
-    [setHoverProgress, calculateVideoPercent],
+    },
+    100,
   );
 
-  useEffect(() => {
-    const bar = progressBarRef?.current;
-    if (!bar) return;
-
-    bar.addEventListener("mousedown", startDragging as any);
-    window.addEventListener("mousemove", onDragging as any);
-    window.addEventListener("mouseup", stopDragging);
-
-    return () => {
-      bar.removeEventListener("mousedown", startDragging as any);
-      window.removeEventListener("mousemove", onDragging as any);
-      window.removeEventListener("mouseup", stopDragging);
-    };
-  }, [progressBarRef, startDragging, onDragging, stopDragging]);
+  onDragMove(updateMediaCurrentTime);
+  onDragStart(() => setStreamLevel(0));
+  onDragEnd(() => setStreamLevel(-1));
 
   return (
     <div
       className="bg-white relative h-2 hover:h-3 transition-height duration-200 ease-in-out w-full rounded-sm hover:cursor-pointer"
       ref={progressBarRef}
-      onClick={updateVideoCurrentTime}
-      onMouseMove={updateVideoHoverTime}
-      onMouseLeave={() => setHoverProgress(0)}
+      onClick={updateMediaCurrentTime}
+      onMouseMove={(e) => !isDragging && updateMediaHoverTime(e)}
+      onMouseLeave={() => {
+        updateMediaHoverTime.cancel();
+        setHoverProgress(0);
+      }}
     >
       <div
         className="bg-zinc-300 h-full absolute rounded-sm"
-        style={{ width: `${videoBufferPercent}%` }}
+        style={{ width: `${mediaBufferPercent}%` }}
       />
       <div
         className="bg-zinc-400 h-full absolute rounded-sm"
         style={{ width: `${hoverProgress}%` }}
       />
       <div
-        className="video-progress-bar bg-green-500 h-full absolute rounded-sm"
-        style={{ width: `${videoCurrentPercent}%` }}
+        className="media-progress-bar bg-green-500 h-full absolute rounded-sm"
+        style={{ width: `${mediaCurrentPercent}%` }}
       />
     </div>
   );

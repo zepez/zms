@@ -3,16 +3,16 @@ import { useVideoContext } from "~/components/video/context";
 import { cn } from "~/lib";
 
 export const PauseIndicator = () => {
-  const { isVideoPaused } = useVideoContext();
+  const { isMediaPaused } = useVideoContext();
 
   return (
     <div
       className={cn(
         "bg-zinc-800 opacity-70 w-32 h-32 flex justify-center items-center rounded-full transition-all duration-100",
-        isVideoPaused ? "opacity-70 scale-100" : "opacity-0 scale-0",
+        isMediaPaused ? "opacity-70 scale-100" : "opacity-0 scale-0",
       )}
     >
-      {isVideoPaused ? (
+      {isMediaPaused ? (
         <PlayIcon size={50} fill="white" />
       ) : (
         <PauseIcon size={50} fill="white" />

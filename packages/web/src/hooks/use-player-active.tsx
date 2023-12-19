@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import type { PlayerRef } from "~/types";
 
 const events = [
   "mousemove",
@@ -11,9 +12,7 @@ const events = [
   "scroll",
 ];
 
-export const usePlayerActive = (
-  playerRef: React.RefObject<HTMLDivElement> | null,
-) => {
+export const usePlayerActive = (playerRef: PlayerRef) => {
   const activityTimer = useRef<NodeJS.Timeout>();
   const [isPlayerActive, setPlayerActive] = useState(true);
   const [isPlayerForcedActive, setPlayerForcedActive] = useState(false);

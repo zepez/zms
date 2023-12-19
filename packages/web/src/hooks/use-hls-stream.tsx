@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Hls, { type LevelSwitchedData, type Events } from "hls.js";
-import type { StreamResolution } from "~/components/video/types";
+import type { HlsRef, MediaRef, StreamResolution } from "~/types";
 
 export const useHlsStream = (
-  hlsRef: React.MutableRefObject<Hls | null>,
-  videoRef: React.RefObject<HTMLVideoElement> | null,
+  hlsRef: HlsRef,
+  mediaRef: MediaRef,
   src: string,
 ) => {
   const [streamError, setStreamError] = useState<string | null>(null);
@@ -55,13 +55,13 @@ export const useHlsStream = (
   );
 
   useEffect(() => {
-    if (!videoRef?.current) return;
-    const video = videoRef.current;
+    if (!mediaRef?.current) return;
+    const media = mediaRef.current;
 
     const onHlsError = () => {
-      const errorMessage = video.error
-        ? `Video element error: ${video.error.code}`
-        : "Unknown video element error";
+      const errorMessage = media.error
+        ? `Media element error: ${media.error.code}`
+        : "Unknown media element error";
       onStreamError(errorMessage);
     };
 
@@ -69,26 +69,26 @@ export const useHlsStream = (
       const hls = new Hls();
       hlsRef.current = hls;
       hls.loadSource(src);
-      hls.attachMedia(video);
+      hls.attachMedia(media);
       hls.on(Hls.Events.ERROR, (_, data) =>
         onStreamError(`${data.type}, ${data.details}`),
       );
       hls.on(Hls.Events.MANIFEST_PARSED, onManifestParsed);
       hls.on(Hls.Events.LEVEL_SWITCHED, onLevelSwitched);
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = src;
-      video.addEventListener("loadedmetadata", () => {
-        video.play().catch((error) => onStreamError(error.message));
+    } else if (media.canPlayType("application/vnd.apple.mpegurl")) {
+      media.src = src;
+      media.addEventListener("loadedmetadata", () => {
+        media.play().catch((error) => onStreamError(error.message));
       });
     }
 
-    video.addEventListener("error", onHlsError);
+    media.addEventListener("error", onHlsError);
 
     return () => {
       if (hlsRef.current) hlsRef.current.destroy();
-      video.removeEventListener("error", onHlsError);
+      media.removeEventListener("error", onHlsError);
     };
-  }, [src, hlsRef, videoRef, onStreamError, onManifestParsed, onLevelSwitched]);
+  }, [src, hlsRef, mediaRef, onStreamError, onManifestParsed, onLevelSwitched]);
 
   return {
     streamLevel,

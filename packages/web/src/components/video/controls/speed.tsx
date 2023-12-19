@@ -5,7 +5,7 @@ export const Speed = () => {
   const playerSpeeds = [0.1, 0.5, 1, 1.5, 2];
   const defaultPlayerSpeedIndex = 2;
 
-  const { videoRef } = useVideoContext();
+  const { mediaRef } = useVideoContext();
   const [playerSpeed, setPlayerSpeed] = useState(
     playerSpeeds[defaultPlayerSpeedIndex],
   );
@@ -14,7 +14,7 @@ export const Speed = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    const video = videoRef?.current;
+    const video = mediaRef?.current;
     if (!video) return;
 
     const currentIndex = playerSpeeds.indexOf(playerSpeed);

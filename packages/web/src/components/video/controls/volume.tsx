@@ -3,7 +3,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import { useVideoContext } from "~/components/video/context";
 
 export const Volume = () => {
-  const { videoVolume, setVideoVolume, isVideoMuted, setVideoMuted } =
+  const { mediaVolume, setMediaVolume, isMediaMuted, setMediaMuted } =
     useVideoContext();
 
   const [isClient, setIsClient] = useState(false);
@@ -19,13 +19,13 @@ export const Volume = () => {
           e.preventDefault();
           e.stopPropagation();
 
-          setVideoMuted(!isVideoMuted);
+          setMediaMuted(!isMediaMuted);
         }}
-        title={isVideoMuted ? "Enable audio" : "Mute audio"}
+        title={isMediaMuted ? "Enable audio" : "Mute audio"}
         suppressHydrationWarning
       >
         {isClient && (
-          <>{isVideoMuted || videoVolume === 0 ? <VolumeX /> : <Volume2 />}</>
+          <>{isMediaMuted || mediaVolume === 0 ? <VolumeX /> : <Volume2 />}</>
         )}
       </button>
       <input
@@ -33,13 +33,13 @@ export const Volume = () => {
         min="0"
         max="1"
         step="0.01"
-        value={isVideoMuted ? 0 : videoVolume}
+        value={isMediaMuted ? 0 : mediaVolume}
         onChange={(e) => {
           e.preventDefault();
           e.stopPropagation();
 
-          setVideoMuted(false);
-          setVideoVolume(parseFloat(e.target.value));
+          setMediaMuted(false);
+          setMediaVolume(parseFloat(e.target.value));
         }}
         className="cursor-pointer appearance-none bg-transparent [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-zinc-300 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-[10px] [&::-webkit-slider-thumb]:w-[10px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-zinc-700 [&::-webkit-slider-thumb]:p-1"
         aria-label="Volume control"

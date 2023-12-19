@@ -3,7 +3,7 @@
 import { useVideoContext } from "~/components/video/context";
 
 export const TimeCodes = () => {
-  const { videoCurrentTime, videoTotalTime } = useVideoContext();
+  const { mediaCurrentTime, mediaTotalTime } = useVideoContext();
 
   const secondsToTimeCode = (seconds: number | null) => {
     if (!seconds) return "00:00:00";
@@ -16,8 +16,8 @@ export const TimeCodes = () => {
 
   return (
     <p className="whitespace-nowrap">
-      {secondsToTimeCode(videoCurrentTime)} /{" "}
-      {secondsToTimeCode(videoTotalTime)}
+      {secondsToTimeCode(mediaCurrentTime)} /{" "}
+      {secondsToTimeCode(mediaTotalTime)}
     </p>
   );
 };

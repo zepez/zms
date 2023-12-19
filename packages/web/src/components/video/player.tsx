@@ -5,7 +5,7 @@ import { Video } from "~/components";
 import { cn } from "~/lib";
 
 export const Player = () => {
-  const { videoRef, streamLoading, streamError } = useVideoContext();
+  const { mediaRef, streamLoading, streamError } = useVideoContext();
 
   if (streamError) return <Video.Error message={streamError} />;
 
@@ -21,7 +21,7 @@ export const Player = () => {
       )}
       <div className={cn("relative w-full h-full", streamLoading && "hidden")}>
         <Video.Controls />
-        <video ref={videoRef} className="w-full h-full">
+        <video ref={mediaRef} className="w-full h-full">
           Your browser does not support HLS video.
         </video>
       </div>

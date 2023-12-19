@@ -2,11 +2,11 @@ import { Pause as PauseIcon, Play as PlayIcon } from "lucide-react";
 import { useVideoContext } from "~/components/video/context";
 
 export const Pause = () => {
-  const { isVideoPaused } = useVideoContext();
+  const { isMediaPaused } = useVideoContext();
 
   return (
-    <button className="p-2" title={isVideoPaused ? "Play" : "Pause"}>
-      {isVideoPaused ? (
+    <button className="p-2" title={isMediaPaused ? "Play" : "Pause"}>
+      {isMediaPaused ? (
         <PlayIcon size={40} fill="white" />
       ) : (
         <PauseIcon size={40} fill="white" />

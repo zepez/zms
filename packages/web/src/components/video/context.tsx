@@ -4,41 +4,44 @@ import React, { createContext, useContext, useRef, useEffect } from "react";
 import Hls from "hls.js";
 import {
   useHlsStream,
-  useMouseDown,
+  useMediaPause,
+  useMediaProgress,
+  useMediaVolume,
   usePlayerActive,
   usePlayerFullscreen,
-  useVideoPause,
-  useVideoVolume,
-  useVideoProgress,
-} from "./hooks";
-import type { StreamResolution } from "~/components/video/types";
+} from "~/hooks";
+import type {
+  MediaRef,
+  PlayerRef,
+  ProgressBarRef,
+  StreamResolution,
+} from "~/types";
 
 interface Context {
   // Refs
-  videoRef: React.RefObject<HTMLVideoElement> | null;
-  playerRef: React.RefObject<HTMLDivElement> | null;
-  progressBarRef: React.RefObject<HTMLDivElement> | null;
+  mediaRef: MediaRef<HTMLVideoElement>;
+  playerRef: PlayerRef;
+  progressBarRef: ProgressBarRef;
   // Activity Tracking
   isPlayerActive: boolean;
   setPlayerForcedActive: (forced: boolean) => void;
-  isProgressBarDragging: boolean;
   // Fullscreen
   isPlayerFullscreen: boolean;
   togglePlayerFullscreen: () => void;
   // Volume
-  videoVolume: number;
-  setVideoVolume: (volume: number) => void;
-  isVideoMuted: boolean;
-  setVideoMuted: (muted: boolean) => void;
+  mediaVolume: number;
+  setMediaVolume: (volume: number) => void;
+  isMediaMuted: boolean;
+  setMediaMuted: (muted: boolean) => void;
   // Pause
-  isVideoPaused: boolean;
-  toggleVideoPaused: () => void;
+  isMediaPaused: boolean;
+  toggleMediaPaused: () => void;
   // Progress
-  videoCurrentTime: number;
-  setVideoCurrentTime: (time: number) => void;
-  videoCurrentPercent: number;
-  videoBufferPercent: number;
-  videoTotalTime: number;
+  mediaCurrentTime: number;
+  setMediaCurrentTime: (time: number) => void;
+  mediaCurrentPercent: number;
+  mediaBufferPercent: number;
+  mediaTotalTime: number;
   // Stream
   streamSource: string | null;
   streamLevel: number;
@@ -50,30 +53,29 @@ interface Context {
 
 const VideoContext = createContext<Context>({
   // Refs
-  videoRef: null,
+  mediaRef: null,
   playerRef: null,
   progressBarRef: null,
   // Activity Tracking
   isPlayerActive: true,
   setPlayerForcedActive: () => {},
-  isProgressBarDragging: false,
   // Fullscreen
   isPlayerFullscreen: false,
   togglePlayerFullscreen: () => {},
   // Volume
-  videoVolume: 1,
-  setVideoVolume: () => {},
-  isVideoMuted: false,
-  setVideoMuted: () => {},
+  mediaVolume: 1,
+  setMediaVolume: () => {},
+  isMediaMuted: false,
+  setMediaMuted: () => {},
   // Pause
-  isVideoPaused: true,
-  toggleVideoPaused: () => {},
+  isMediaPaused: true,
+  toggleMediaPaused: () => {},
   // Progress
-  videoCurrentTime: 0,
-  setVideoCurrentTime: () => {},
-  videoCurrentPercent: 0,
-  videoBufferPercent: 0,
-  videoTotalTime: 0,
+  mediaCurrentTime: 0,
+  setMediaCurrentTime: () => {},
+  mediaCurrentPercent: 0,
+  mediaBufferPercent: 0,
+  mediaTotalTime: 0,
   // Stream
   streamSource: null,
   streamLevel: -1,
@@ -91,32 +93,31 @@ export const Provider = ({
   src: string;
 }) => {
   const hlsRef = useRef<Hls | null>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const mediaRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
 
   const { isPlayerActive, setPlayerForcedActive } = usePlayerActive(playerRef);
   const { isPlayerFullscreen, togglePlayerFullscreen } =
     usePlayerFullscreen(playerRef);
-  const [isProgressBarDragging] = useMouseDown(progressBarRef);
-  const { videoVolume, setVideoVolume, isVideoMuted, setVideoMuted } =
-    useVideoVolume(videoRef);
-  const { isVideoPaused, toggleVideoPaused } = useVideoPause(videoRef);
+  const { mediaVolume, setMediaVolume, isMediaMuted, setMediaMuted } =
+    useMediaVolume(mediaRef);
+  const { isMediaPaused, toggleMediaPaused } = useMediaPause(mediaRef);
   const {
-    videoCurrentTime,
-    setVideoCurrentTime,
-    videoCurrentPercent,
-    videoBufferPercent,
-    videoTotalTime,
-    offsetVideoTime,
-  } = useVideoProgress(videoRef);
+    mediaCurrentTime,
+    setMediaCurrentTime,
+    mediaCurrentPercent,
+    mediaBufferPercent,
+    mediaTotalTime,
+    offsetMediaTime,
+  } = useMediaProgress(mediaRef);
   const {
     streamLevel,
     setStreamLevel,
     streamLevels,
     streamLoading,
     streamError,
-  } = useHlsStream(hlsRef, videoRef, src);
+  } = useHlsStream(hlsRef, mediaRef, src);
 
   // ==============================
   // Shortcuts
@@ -126,23 +127,23 @@ export const Provider = ({
       switch (event.code) {
         case "Space":
           event.preventDefault();
-          toggleVideoPaused();
+          toggleMediaPaused();
           break;
         case "ArrowLeft":
           event.preventDefault();
-          offsetVideoTime(-5);
+          offsetMediaTime(-5);
           break;
         case "KeyJ":
           event.preventDefault();
-          offsetVideoTime(-10);
+          offsetMediaTime(-10);
           break;
         case "ArrowRight":
           event.preventDefault();
-          offsetVideoTime(5);
+          offsetMediaTime(5);
           break;
         case "KeyL":
           event.preventDefault();
-          offsetVideoTime(10);
+          offsetMediaTime(10);
           break;
         case "KeyF":
           event.preventDefault();
@@ -150,7 +151,7 @@ export const Provider = ({
           break;
         case "KeyM":
           event.preventDefault();
-          setVideoMuted(!isVideoMuted);
+          setMediaMuted(!isMediaMuted);
           break;
       }
     };
@@ -161,41 +162,40 @@ export const Provider = ({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [
-    isVideoMuted,
-    offsetVideoTime,
-    setVideoMuted,
+    isMediaMuted,
+    offsetMediaTime,
+    setMediaMuted,
     togglePlayerFullscreen,
-    toggleVideoPaused,
+    toggleMediaPaused,
   ]);
 
   return (
     <VideoContext.Provider
       value={{
         // Refs
-        videoRef,
+        mediaRef,
         playerRef,
         progressBarRef,
         // Activity Tracking
         isPlayerActive,
         setPlayerForcedActive,
-        isProgressBarDragging,
         // Fullscreen
         isPlayerFullscreen,
         togglePlayerFullscreen,
         // Volume
-        videoVolume,
-        setVideoVolume,
-        isVideoMuted,
-        setVideoMuted,
+        mediaVolume,
+        setMediaVolume,
+        isMediaMuted,
+        setMediaMuted,
         // Pause
-        isVideoPaused,
-        toggleVideoPaused,
+        isMediaPaused,
+        toggleMediaPaused,
         // Progress
-        videoCurrentTime,
-        setVideoCurrentTime,
-        videoCurrentPercent,
-        videoBufferPercent,
-        videoTotalTime,
+        mediaCurrentTime,
+        setMediaCurrentTime,
+        mediaCurrentPercent,
+        mediaBufferPercent,
+        mediaTotalTime,
         // Stream
         streamSource: src,
         streamLevel,
