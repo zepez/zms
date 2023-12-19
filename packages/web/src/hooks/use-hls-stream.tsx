@@ -2,7 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Hls, { type LevelSwitchedData, type Events } from "hls.js";
-import type { HlsRef, MediaRef, StreamResolution } from "~/types";
+import type {
+  HlsRef,
+  MediaRef,
+  StreamResolution,
+  SetStreamLevelOptions,
+} from "~/types";
 
 export const useHlsStream = (
   hlsRef: HlsRef,
@@ -13,13 +18,15 @@ export const useHlsStream = (
   const [streamLoading, setStreamLoading] = useState(true);
   const [streamLevel, setStreamLevelState] = useState<number>(-1);
   const [streamLevels, setStreamLevels] = useState<StreamResolution[]>([]);
+  const [streamLevelPreferred, setStreamLevelPreferred] = useState<number>(-1);
 
   const setStreamLevel = useCallback(
-    (level: number) => {
+    (level: number, opts: SetStreamLevelOptions) => {
       const hls = hlsRef.current;
       if (!hls) return;
 
-      hls.currentLevel = level;
+      if (opts.preferred) setStreamLevelPreferred(level);
+      opts.immediate ? (hls.currentLevel = level) : (hls.nextLevel = level);
     },
     [hlsRef],
   );
@@ -94,6 +101,7 @@ export const useHlsStream = (
     streamLevel,
     setStreamLevel,
     streamLevels,
+    streamLevelPreferred,
     streamLoading,
     streamError,
   } as const;

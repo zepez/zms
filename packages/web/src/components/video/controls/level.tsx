@@ -13,7 +13,9 @@ const LevelDropdownItem = (props: { title: string; index: number }) => {
       title={props.title}
       checked={checked}
       onClick={(e) => e.stopPropagation()}
-      onCheckedChange={() => setStreamLevel(props.index)}
+      onCheckedChange={() =>
+        setStreamLevel(props.index, { immediate: true, preferred: true })
+      }
       className="flex items-center gap-2 py-1 pl-2 pr-8 cursor-pointer"
     >
       {!checked && <div className="w-6" />}

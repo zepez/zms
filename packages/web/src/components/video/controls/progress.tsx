@@ -6,6 +6,8 @@ import { useDrag } from "~/hooks";
 import { useVideoContext } from "~/components/video/context";
 
 export const Progress = () => {
+  const throttleTime = 10;
+
   const {
     progressBarRef,
     mediaTotalTime,
@@ -13,12 +15,13 @@ export const Progress = () => {
     mediaCurrentPercent,
     mediaBufferPercent,
     setStreamLevel,
+    streamLevelPreferred,
   } = useVideoContext();
   const [hoverProgress, setHoverProgress] = useState(0);
   const { isDragging, onDragStart, onDragMove, onDragEnd } =
     useDrag(progressBarRef);
 
-  const calculateMediaPercent = useCallback(
+  const calculateMediaPercent = throttle(
     (e: MouseEvent | React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       e.stopPropagation();
@@ -32,49 +35,68 @@ export const Progress = () => {
 
       return percent;
     },
-    [progressBarRef],
+    throttleTime,
   );
 
-  const updateMediaCurrentTimeThrottled = throttle(
+  const calculateMediaTime = throttle((percent: number, total: number) => {
+    return (percent / 100) * total;
+  }, throttleTime);
+
+  const updateMediaCurrentTime = useCallback(
     (e: MouseEvent | React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
       const percent = calculateMediaPercent(e);
-      const newTime = (percent / 100) * mediaTotalTime;
+      if (!percent) return;
+
+      const newTime = calculateMediaTime(percent, mediaTotalTime);
+      if (!newTime) return;
 
       setMediaCurrentTime(newTime);
     },
-    50,
+    [
+      setMediaCurrentTime,
+      mediaTotalTime,
+      calculateMediaPercent,
+      calculateMediaTime,
+    ],
   );
 
-  const updateMediaCurrentTime = useCallback(updateMediaCurrentTimeThrottled, [
-    updateMediaCurrentTimeThrottled,
-  ]);
-
-  const updateMediaHoverTime = throttle(
+  const updateMediaHoverTime = useCallback(
     (e: MouseEvent | React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
       const percent = calculateMediaPercent(e);
+      if (!percent) return;
+
       setHoverProgress(percent);
     },
-    100,
+    [setHoverProgress, calculateMediaPercent],
   );
 
   onDragMove(updateMediaCurrentTime);
-  onDragStart(() => setStreamLevel(0));
-  onDragEnd(() => setStreamLevel(-1));
+  onDragStart(() => setStreamLevel(0, { immediate: true, preferred: false }));
+  onDragEnd(() =>
+    setStreamLevel(streamLevelPreferred, {
+      immediate: false,
+      preferred: false,
+    }),
+  );
 
   return (
     <div
       className="bg-white relative h-2 hover:h-3 transition-height duration-200 ease-in-out w-full rounded-sm hover:cursor-pointer"
       ref={progressBarRef}
       onClick={updateMediaCurrentTime}
-      onMouseMove={(e) => !isDragging && updateMediaHoverTime(e)}
+      onMouseMove={(e) => {
+        if (isDragging) return;
+        updateMediaHoverTime(e);
+      }}
       onMouseLeave={() => {
-        updateMediaHoverTime.cancel();
+        if (isDragging) return;
+        calculateMediaPercent.cancel();
         setHoverProgress(0);
       }}
     >

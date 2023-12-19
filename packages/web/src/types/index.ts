@@ -15,3 +15,8 @@ export interface StreamResolution {
   width: number;
   height: number;
 }
+
+export interface SetStreamLevelOptions {
+  immediate: boolean;
+  preferred: boolean;
+}

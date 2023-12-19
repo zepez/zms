@@ -13,7 +13,8 @@ export const useMediaProgress = (mediaRef: MediaRef) => {
     if (!mediaRef?.current) return;
     const media = mediaRef.current;
 
-    if (time < 0 || isNaN(time)) time = 0;
+    if (time === Infinity || isNaN(time)) return;
+    if (time < 0) time = 0;
     media.currentTime = time;
   };
 

@@ -15,6 +15,7 @@ import type {
   PlayerRef,
   ProgressBarRef,
   StreamResolution,
+  SetStreamLevelOptions,
 } from "~/types";
 
 interface Context {
@@ -45,8 +46,9 @@ interface Context {
   // Stream
   streamSource: string | null;
   streamLevel: number;
-  setStreamLevel: (level: number) => void;
+  setStreamLevel: (level: number, options: SetStreamLevelOptions) => void;
   streamLevels: StreamResolution[];
+  streamLevelPreferred: number;
   streamLoading: boolean;
   streamError: string | null;
 }
@@ -81,6 +83,7 @@ const VideoContext = createContext<Context>({
   streamLevel: -1,
   setStreamLevel: () => {},
   streamLevels: [],
+  streamLevelPreferred: -1,
   streamLoading: true,
   streamError: null,
 });
@@ -115,6 +118,7 @@ export const Provider = ({
     streamLevel,
     setStreamLevel,
     streamLevels,
+    streamLevelPreferred,
     streamLoading,
     streamError,
   } = useHlsStream(hlsRef, mediaRef, src);
@@ -201,6 +205,7 @@ export const Provider = ({
         streamLevel,
         setStreamLevel,
         streamLevels,
+        streamLevelPreferred,
         streamLoading,
         streamError,
       }}

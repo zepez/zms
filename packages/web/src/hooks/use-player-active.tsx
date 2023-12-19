@@ -17,9 +17,9 @@ export const usePlayerActive = (playerRef: PlayerRef) => {
   const [isPlayerActive, setPlayerActive] = useState(true);
   const [isPlayerForcedActive, setPlayerForcedActive] = useState(false);
 
-  const setPlayerInactive = () => {
+  const setPlayerInactive = useCallback(() => {
     if (!isPlayerForcedActive) setPlayerActive(false);
-  };
+  }, [isPlayerForcedActive, setPlayerActive]);
 
   const resetPlayerActiveTimer = useCallback(() => {
     clearTimeout(activityTimer.current);
@@ -47,7 +47,7 @@ export const usePlayerActive = (playerRef: PlayerRef) => {
         player.removeEventListener(event, resetPlayerActiveTimer),
       );
     };
-  }, [playerRef, resetPlayerActiveTimer]);
+  }, [playerRef, resetPlayerActiveTimer, setPlayerActive, setPlayerInactive]);
 
   return {
     isPlayerActive,

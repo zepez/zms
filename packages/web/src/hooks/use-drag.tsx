@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import throttle from "lodash.throttle";
 
 type ElementRef = React.RefObject<HTMLElement> | null;
 type Callback = (e: MouseEvent) => void;
@@ -12,66 +13,72 @@ export const useDrag = (elementRef: ElementRef) => {
   const onDragMove = useRef<Callback>(() => {});
   const onDragEnd = useRef<Callback>(() => {});
 
-  const handleDragStart = useCallback(
-    (e: Event | MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+  const handleDragStart = throttle((e: Event | MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-      setDragging(true);
-      onDragStart.current(e as MouseEvent);
-    },
-    [onDragStart],
-  );
+    setDragging(true);
+    onDragStart.current(e as MouseEvent);
+  }, 50);
 
-  const handleDragMove = useCallback(
-    (e: Event | MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+  const handleDragStartCallback = useCallback(handleDragStart, [
+    handleDragStart,
+  ]);
 
-      if (!isDragging) return;
+  const handleDragMove = throttle((e: Event | MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
 
-      onDragMove.current(e as MouseEvent);
-    },
-    [onDragMove, isDragging],
-  );
+    if (!isDragging) return;
 
-  const handleDragEnd = useCallback(
-    (e: Event | MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
+    onDragMove.current(e as MouseEvent);
+  }, 50);
 
-      setDragging(false);
-      onDragEnd.current(e as MouseEvent);
-    },
-    [onDragEnd],
-  );
+  const handleDragMoveCallback = useCallback(handleDragMove, [handleDragMove]);
+
+  const handleDragEnd = throttle((e: Event | MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!isDragging) return;
+
+    setDragging(false);
+    onDragEnd.current(e as MouseEvent);
+  }, 50);
+
+  const handleDragEndCallback = useCallback(handleDragEnd, [handleDragEnd]);
 
   useEffect(() => {
     const element = elementRef?.current;
     if (!element) return;
 
     ["mousedown", "touchstart"].forEach((event) =>
-      element.addEventListener(event, handleDragStart),
+      element.addEventListener(event, handleDragStartCallback),
     );
     ["mousemove", "touchmove"].forEach((event) =>
-      window.addEventListener(event, handleDragMove),
+      window.addEventListener(event, handleDragMoveCallback),
     );
     ["mouseup", "touchend"].forEach((event) =>
-      window.addEventListener(event, handleDragEnd),
+      window.addEventListener(event, handleDragEndCallback),
     );
 
     return () => {
       ["mousedown", "touchstart"].forEach((event) =>
-        element.removeEventListener(event, handleDragStart),
+        element.removeEventListener(event, handleDragStartCallback),
       );
       ["mousemove", "touchmove"].forEach((event) =>
-        window.removeEventListener(event, handleDragMove),
+        window.removeEventListener(event, handleDragMoveCallback),
       );
       ["mouseup", "touchend"].forEach((event) =>
-        window.removeEventListener(event, handleDragEnd),
+        window.removeEventListener(event, handleDragEndCallback),
       );
     };
-  }, [elementRef, handleDragStart, handleDragMove, handleDragEnd]);
+  }, [
+    elementRef,
+    handleDragStartCallback,
+    handleDragMoveCallback,
+    handleDragEndCallback,
+  ]);
 
   return {
     isDragging,

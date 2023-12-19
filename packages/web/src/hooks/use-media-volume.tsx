@@ -16,7 +16,7 @@ export const useMediaVolume = (mediaRef: MediaRef) => {
     const media = mediaRef.current;
 
     media.volume = isMediaMuted ? 0 : mediaVolume ?? 1;
-  }, [mediaVolume, isMediaMuted, mediaRef]);
+  }, [mediaRef, mediaVolume, isMediaMuted]);
 
   return {
     mediaVolume: mediaVolume ?? 1,
