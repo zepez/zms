@@ -68,24 +68,8 @@ importers:
         specifier: ^4.8.4
         version: 4.9.5
 
-  packages/config-client:
-    dependencies:
-      zod:
-        specifier: ^3.21.4
-        version: 3.22.4
-    devDependencies:
-      '@types/node':
-        specifier: ^18.0.0
-        version: 18.19.3
-      typescript:
-        specifier: ^4.8.4
-        version: 4.9.5
-
   packages/config-server:
     dependencies:
-      '@packages/config-client':
-        specifier: workspace:*
-        version: link:../config-client
       zod:
         specifier: ^3.21.4
         version: 3.22.4
@@ -1754,12 +1738,12 @@ packages:
   /@types/eslint-scope@3.7.7:
     resolution: {integrity: sha512-MzMFlSLBqNF2gcHWO0G1vP/YQyfvrxZ0bF+u7mzUdZ1/xK4A4sru+nraZz5i3iEIk1l1uyicaDVTB4QbbEkAYg==}
     dependencies:
-      '@types/eslint': 8.44.9
+      '@types/eslint': 8.56.0
       '@types/estree': 1.0.5
     dev: true
 
-  /@types/eslint@8.44.9:
-    resolution: {integrity: sha512-6yBxcvwnnYoYT1Uk2d+jvIfsuP4mb2EdIxFnrPABj5a/838qe5bGkNLFOiipX4ULQ7XVQvTxOh7jO+BTAiqsEw==}
+  /@types/eslint@8.56.0:
+    resolution: {integrity: sha512-FlsN0p4FhuYRjIxpbdXovvHQhtlG05O1GG/RNWvdAxTboR438IOTwmrY/vLA+Xfgg06BTkP045M3vpFwTMv1dg==}
     dependencies:
       '@types/estree': 1.0.5
       '@types/json-schema': 7.0.15
@@ -2965,7 +2949,7 @@ packages:
       json-diff: 0.9.0
       minimatch: 7.4.6
       semver: 7.5.4
-      wrangler: 3.22.0
+      wrangler: 3.22.1
       zod: 3.22.4
     transitivePeerDependencies:
       - bufferutil
@@ -6922,8 +6906,8 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20231030.0
     dev: true
 
-  /wrangler@3.22.0:
-    resolution: {integrity: sha512-P+HJ2iXsPIVb2uXvfG1HubFVz+GowXfTZv+vTuNWZq7xRgJroB9JSZIM6rZIrtq2rC+I8UxxbBEvwldLVw8+FA==}
+  /wrangler@3.22.1:
+    resolution: {integrity: sha512-fN7WOF6Ono/TV5V90PuJQNf0azS7B+5C/N/KRjqhlAIQBz+c0yLOGkF6kC/akxjr1yIAC9AzcPk9+OuTSq0C+g==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     dependencies:
