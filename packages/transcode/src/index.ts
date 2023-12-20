@@ -72,6 +72,7 @@ const transcode = (options: TranscodeOptions) => {
         "-profile:v baseline",
         "-level 3.0",
         `-s ${options.resolution}`,
+        "-sc_threshold 0",
         "-start_number 0",
         `-hls_time ${options.segmentDuration}`,
         "-hls_list_size 0",
@@ -109,7 +110,7 @@ const pipeline = async ({ inputPath }: PipelineOptions) => {
       name: preset.name,
       resolution: preset.resolution,
       bandwidth: preset.bandwidth,
-      segmentDuration: 5,
+      segmentDuration: 4,
       immediatelyAvailable: preset.immediatelyAvailable,
     });
   }

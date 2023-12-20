@@ -1,0 +1,13 @@
+data
+
+**/.env
+**/.git
+**/.gitignore
+**/.turbo
+**/.vscode
+**/.dockerignore
+**/node_modules
+**/*.log
+
+Dockerfile
+docker-compose.yml

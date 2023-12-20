@@ -14,7 +14,17 @@
       "persistent": false,
       "dependsOn": ["db:create"]
     },
+    "build": {
+      "cache": false,
+      "persistent": false,
+      "dependsOn": ["db:migrate"]
+    },
     "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["db:migrate"]
+    },
+    "start": {
       "cache": false,
       "persistent": true,
       "dependsOn": ["db:migrate"]

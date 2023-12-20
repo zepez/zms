@@ -16,7 +16,10 @@
     "lint": "pnpm turbo lint",
     "db:migrate": "pnpm turbo db:migrate",
     "db:create": "pnpm turbo db:create",
-    "dev": "pnpm turbo dev"
+    "docker": "docker-compose up",
+    "build": "pnpm turbo build",
+    "dev": "pnpm turbo dev",
+    "start": "pnpm turbo start"
   },
   "devDependencies": {
     "@eslint/js": "^8.56.0",
