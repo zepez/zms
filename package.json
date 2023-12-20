@@ -12,7 +12,10 @@
   "scripts": {
     "commit": "gitmoji -c",
     "clean": "scripts/clean.sh",
+    "clean-turbo-cache": "scripts/clean-turbo-cache.sh",
     "lint": "pnpm turbo lint",
+    "db:migrate": "pnpm turbo db:migrate",
+    "db:create": "pnpm turbo db:create",
     "dev": "pnpm turbo dev"
   },
   "devDependencies": {

@@ -5,7 +5,7 @@
   "scripts": {
     "db:generate": "pnpm with-env drizzle-kit generate:sqlite",
     "db:create": "pnpm with-env esno ./src/scripts/create.ts",
-    "db:migrate": "pnpm db:create && pnpm with-env esno ./src/scripts/migrate.ts",
+    "db:migrate": "pnpm with-env esno ./src/scripts/migrate.ts",
     "db:studio": "pnpm with-env drizzle-kit studio --port 8080",
     "lint": "ESLINT_USE_FLAT_CONFIG=true eslint -c ../../eslint.config.js",
     "with-env": "dotenv -e ../../.env --"

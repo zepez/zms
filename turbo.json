@@ -1,10 +1,23 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "lint": {},
+    "lint": {
+      "cache": true,
+      "persistent": false
+    },
+    "db:create": {
+      "cache": true,
+      "persistent": false
+    },
+    "db:migrate": {
+      "cache": true,
+      "persistent": false,
+      "dependsOn": ["db:create"]
+    },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["db:migrate"]
     }
   }
 }
