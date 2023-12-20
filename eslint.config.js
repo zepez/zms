@@ -3,23 +3,36 @@ import globals from "globals";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 
+const globalIgnorePatterns = [
+  "**/data/**/*",
+  "**/node_modules/**/*",
+  "**/.next/**/*",
+  "**/dist/**/*",
+  "**/.turbo/**/*",
+];
+
 export default [
-  js.configs.recommended,
   {
-    rules: {
-      indent: ["error", 2],
-      quotes: ["error", "double"],
-      "no-unused-vars": "error",
-    },
-    ignores: ["**/dist/*", ".turbo", "**/node_modules/*"],
+    ignores: globalIgnorePatterns,
+  },
+  {
+    ...js.configs.recommended,
+    files: ["**/*.js", "**/*.jsx"],
+    ignores: globalIgnorePatterns,
     languageOptions: {
       globals: {
         ...globals.node,
       },
     },
+    rules: {
+      indent: ["error", 2],
+      quotes: ["error", "double"],
+      "no-unused-vars": "error",
+    },
   },
   {
-    files: ["**/*.ts", "**/*.tsx"],
+    files: ["**/*.ts", "**/*.tsx", ""],
+    ignores: globalIgnorePatterns,
     plugins: {
       "@typescript-eslint": tsPlugin,
     },
@@ -31,11 +44,7 @@ export default [
       },
     },
     rules: {
-      "@typescript-eslint/no-unused-vars": {
-        argsIgnorePattern: "^_",
-        varsIgnorePattern: "^_",
-        caughtErrorsIgnorePattern: "^_",
-      },
+      "@typescript-eslint/no-unused-vars": "error",
     },
   },
 ];
