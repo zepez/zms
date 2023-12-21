@@ -5,6 +5,10 @@
       "cache": true,
       "persistent": false
     },
+    "script:scaffold": {
+      "cache": true,
+      "persistent": false
+    },
     "db:create": {
       "cache": true,
       "persistent": false
@@ -17,17 +21,17 @@
     "build": {
       "cache": false,
       "persistent": false,
-      "dependsOn": ["db:migrate"]
+      "dependsOn": ["script:scaffold", "db:migrate"]
     },
     "dev": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["db:migrate"]
+      "dependsOn": ["script:scaffold", "db:migrate"]
     },
     "start": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["db:migrate"]
+      "dependsOn": ["script:scaffold", "db:migrate"]
     }
   }
 }

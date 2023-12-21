@@ -15,8 +15,7 @@ export const Player = () => {
       <div className={cn("relative w-full h-full")}>
         {streamLoading || streamError ? (
           <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center z-10 bg-zinc-900/80">
-            {streamLoading && <Video.States.Loading message="Loading" />}
-            {streamError && <Video.States.Error message={streamError} />}
+            <Video.States />
           </div>
         ) : (
           <Video.Controls />

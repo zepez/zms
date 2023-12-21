@@ -46,3 +46,32 @@
 7. Commit changes with gitmoji cli by running `pnpm commit`
    
 8. Push to origin and open a PR.
+
+
+Ok. Here's what needs to happen: 
+
+1. Ensure the directory structure
+   1. data
+      1. queue
+      2. media
+      3. archive
+2. Create a new process/package that starts with the web server
+3. Listen for changes in the `data/queue` directory 
+4. Use ffmprobe to get metadata about media files that have been added
+   1. Video
+      1. File Name
+      2. Resolution
+      3. Duration
+      4. Codec
+      5. Checksum
+      6. Format
+      7. more++
+5. Create a hash from the metadata and create a `_hash` directory
+6. Write the metadata to `_hash/meta.json`
+7. Create a row in the database. Use the hash as the id - can also store the metadata for filtering purposes. This can be edited, but it must not change the hash, since the hash is used to access the directory where the transcoded files are stored.  
+8. File metadata must be stored with `file` prefix
+9. Store transcoding state (highest resolution) in the database on same row (null default)
+10. Create a new row in database table that emulates a queue
+11. If no other transcoding jobs are currently running, kick off transcoding process
+12. As each resolution is finished, update original row with hash and the higher resolution 
+13. On finish, mark queue row as finished

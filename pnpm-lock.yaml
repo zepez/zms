@@ -127,6 +127,19 @@ importers:
         specifier: ^4.8.4
         version: 4.9.5
 
+  packages/scripts:
+    dependencies:
+      '@packages/common':
+        specifier: workspace:*
+        version: link:../common
+    devDependencies:
+      '@types/node':
+        specifier: ^18.0.0
+        version: 18.19.3
+      typescript:
+        specifier: ^4.8.4
+        version: 4.9.5
+
   packages/transcode:
     dependencies:
       '@packages/common':
