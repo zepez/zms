@@ -8,7 +8,8 @@ export async function GET(
   { params }: { params: { file: string[] } },
 ) {
   try {
-    const mediaPath = getDataPath(params.file.join("/"));
+    const storePath = getDataPath("/store");
+    const mediaPath = path.join(storePath, params.file.join("/"));
     const mediaUrl = new URL(mediaPath, request.nextUrl);
     const extension = path.extname(mediaUrl.pathname);
 

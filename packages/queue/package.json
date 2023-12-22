@@ -1,0 +1,25 @@
+{
+  "name": "@packages/queue",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "ESLINT_USE_FLAT_CONFIG=true eslint -c ../../eslint.config.js",
+    "dev": "pnpm with-env esno ./src/index.ts",
+    "start": "pnpm with-env esno ./src/index.ts",
+    "with-env": "dotenv -e ../../.env --"
+  },
+  "dependencies": {
+    "@packages/common": "workspace:*",
+    "@packages/config-server": "workspace:*",
+    "bullmq": "^4.17.0",
+    "chokidar": "^3.5.3",
+    "fluent-ffmpeg": "^2.1.2",
+    "with-env": "dotenv -e ../../.env --",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.24",
+    "@types/node": "^18.0.0",
+    "typescript": "^4.8.4"
+  }
+}

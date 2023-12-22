@@ -2,9 +2,24 @@ version: "3.8"
 services:
   zms:
     build: .
+    depends_on:
+      - redis
     volumes:
-      - ./data:/usr/src/app/data
+      - type: bind
+        source: ./data
+        target: /usr/src/app/data
     ports:
       - "3000:3000"
     env_file:
       - .env
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - FLAG_MOCK_CONFIG=false
+  redis:
+    image: redis:latest
+    command: redis-server --appendonly yes
+    volumes:
+      - ./data/db:/data
+    ports:
+      - "6379:6379"
