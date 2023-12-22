@@ -1,23 +1,35 @@
 import fs from "fs";
 import path from "path";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getDataPath } from "@packages/common";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { file: string[] } },
-) {
+const getFileBlob = (path: string) => {
   try {
-    const storePath = getDataPath("/store");
-    const mediaPath = path.join(storePath, params.file.join("/"));
-    const mediaUrl = new URL(mediaPath, request.nextUrl);
-    const extension = path.extname(mediaUrl.pathname);
+    return fs.readFileSync(path);
+  } catch (e) {
+    return null;
+  }
+};
 
-    const blob = fs.readFileSync(mediaPath);
+export const GET = (req: NextRequest) => {
+  try {
+    const url = new URL(req.url);
+    const inputFileBasePath = url.pathname.split("/").slice(3).join("/");
+
+    const storeDirPath = getDataPath("/store");
+    const inputFilePath = path.join(storeDirPath, inputFileBasePath);
+    const inputFileUrl = new URL(inputFilePath, req.nextUrl);
+    const inputFileExt = path.extname(inputFileUrl.pathname);
+
+    const blob = getFileBlob(inputFilePath);
+
+    if (!blob) {
+      return new NextResponse(null, { status: 404, statusText: "Not Found" });
+    }
 
     let contentTypeHeader;
 
-    switch (extension) {
+    switch (inputFileExt) {
       case ".m3u8":
         contentTypeHeader = "application/vnd.apple.mpegurl";
         break;
@@ -33,8 +45,10 @@ export async function GET(
 
     return new NextResponse(blob, { status: 200, statusText: "OK", headers });
   } catch (e) {
-    console.error(`Error loading ${params.file.join("/")}`);
     if (e instanceof Error) console.log(e.message);
-    return new NextResponse(null, { status: 404, statusText: "Not Found" });
+    return new NextResponse(null, {
+      status: 500,
+      statusText: "Internal Server Error",
+    });
   }
-}
+};
