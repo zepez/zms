@@ -1,9 +1,9 @@
 import path from "path";
-import { migrate } from "drizzle-orm/libsql/migrator";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { db } from "../index";
 
-const main = async () => {
-  await migrate(db, {
+const main = () => {
+  migrate(db, {
     migrationsFolder: path.join(__dirname, "..", "migrations"),
   });
 

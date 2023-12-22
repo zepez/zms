@@ -17,8 +17,9 @@ delete_directory() {
 
 delete_file '*.lock'
 delete_file '*.lockb'
-delete_file 'yarn.lock'
 delete_file 'package-lock.json'
+delete_file 'yarn.lock'
+delete_file 'pnpm-lock.yaml'
 
 delete_directory '.turbo'
 delete_directory 'node_modules'

@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import ffmpeg from "fluent-ffmpeg";
-import { getMediaPath, ensureMediaPath } from "@packages/common";
+import { getDataPath, ensureDataPath } from "@packages/common";
 
 const presets = [
   {
@@ -50,34 +50,35 @@ interface TranscodeOptions {
 const transcode = (options: TranscodeOptions) => {
   return new Promise((resolve, reject) => {
     const outputDir = `${options.outputPath}/${options.name}`;
-    ensureMediaPath(outputDir);
+    ensureDataPath(outputDir);
 
     const playlistInfo = `#EXT-X-STREAM-INF:BANDWIDTH=${options.bandwidth},RESOLUTION=${options.resolution}\n${options.name}/playlist.m3u8\n`;
 
     if (options.immediatelyAvailable) {
-      fs.appendFileSync(getMediaPath(options.masterPath), playlistInfo);
+      fs.appendFileSync(getDataPath(options.masterPath), playlistInfo);
     }
 
     const callback = () => {
       console.log(`${options.name} transcoding finished`);
 
       if (!options.immediatelyAvailable) {
-        fs.appendFileSync(getMediaPath(options.masterPath), playlistInfo);
+        fs.appendFileSync(getDataPath(options.masterPath), playlistInfo);
       }
       resolve(true);
     };
 
-    ffmpeg(getMediaPath(options.inputPath))
+    ffmpeg(getDataPath(options.inputPath))
       .outputOptions([
         "-profile:v baseline",
         "-level 3.0",
         `-s ${options.resolution}`,
+        "-sc_threshold 0",
         "-start_number 0",
         `-hls_time ${options.segmentDuration}`,
         "-hls_list_size 0",
         "-f hls",
       ])
-      .output(getMediaPath(`${outputDir}/playlist.m3u8`))
+      .output(getDataPath(`${outputDir}/playlist.m3u8`))
       .on("end", callback)
       .on("error", (err) => {
         console.error("Error:", err);
@@ -96,10 +97,10 @@ const pipeline = async ({ inputPath }: PipelineOptions) => {
   const baseDirName = path.dirname(inputPath);
 
   const outputPath = `${baseDirName}/_${baseFileName}`;
-  ensureMediaPath(outputPath);
+  ensureDataPath(outputPath);
 
   const masterPath = `${outputPath}/master.m3u8`;
-  fs.writeFileSync(getMediaPath(masterPath), "#EXTM3U\n");
+  fs.writeFileSync(getDataPath(masterPath), "#EXTM3U\n");
 
   for (const preset of presets) {
     await transcode({
@@ -109,7 +110,7 @@ const pipeline = async ({ inputPath }: PipelineOptions) => {
       name: preset.name,
       resolution: preset.resolution,
       bandwidth: preset.bandwidth,
-      segmentDuration: 5,
+      segmentDuration: 4,
       immediatelyAvailable: preset.immediatelyAvailable,
     });
   }

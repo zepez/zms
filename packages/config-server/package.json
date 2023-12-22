@@ -6,7 +6,6 @@
     "lint": "ESLINT_USE_FLAT_CONFIG=true eslint -c ../../eslint.config.js"
   },
   "dependencies": {
-    "@packages/config-client": "workspace:*",
     "zod": "^3.21.4"
   },
   "devDependencies": {
