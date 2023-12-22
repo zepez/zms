@@ -7,6 +7,9 @@ const mock = {
   WEB_PORT: "3000",
   AUTH_GITHUB_CLIENT_ID: "githubClientId",
   AUTH_GITHUB_CLIENT_SECRET: "githubClientSecret",
+  REDIS_HOST: "localhost",
+  REDIS_PORT: "6379",
+  FFMPEG_ADDITIONAL_ARGS: "",
   FLAG_MOCK_CONFIG: "true",
   FLAG_NEXT_BUNDLE: "false",
 } as const;
@@ -19,6 +22,9 @@ const schema = z
     WEB_PORT: z.string().default(mock.WEB_PORT),
     AUTH_GITHUB_CLIENT_ID: z.string(),
     AUTH_GITHUB_CLIENT_SECRET: z.string(),
+    REDIS_HOST: z.string().default(mock.REDIS_HOST),
+    REDIS_PORT: z.string().default(mock.REDIS_PORT),
+    FFMPEG_ADDITIONAL_ARGS: z.string().default(mock.FFMPEG_ADDITIONAL_ARGS),
     FLAG_MOCK_CONFIG: z.enum(["true", "false"]).default("false"),
     FLAG_NEXT_BUNDLE: z.enum(["true", "false"]).default(mock.FLAG_NEXT_BUNDLE),
   })
@@ -26,6 +32,8 @@ const schema = z
     ...obj,
     WEB_PORT: parseInt(obj.WEB_PORT),
     WEB_URL: `${obj.WEB_PROTOCOL}://${obj.WEB_HOST}:${obj.WEB_PORT}`,
+    REDIS_PORT: parseInt(obj.REDIS_PORT),
+    FFMPEG_ADDITIONAL_ARGS: obj.FFMPEG_ADDITIONAL_ARGS.split(","),
     FLAG_MOCK_CONFIG: obj.FLAG_MOCK_CONFIG === "true",
     // NOTE: This is checking process.env on purpose.
     // It is set manually by webpack during the build process.

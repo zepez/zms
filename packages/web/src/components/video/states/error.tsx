@@ -1,7 +1,7 @@
 import { AlertCircle } from "lucide-react";
 
 interface Props {
-  message: string;
+  message: string | null;
 }
 
 export const Error = ({ message }: Props) => {

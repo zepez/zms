@@ -16,7 +16,7 @@
     "lint": "pnpm turbo lint",
     "db:migrate": "pnpm turbo db:migrate",
     "db:create": "pnpm turbo db:create",
-    "docker": "docker-compose up",
+    "docker": "docker-compose up --build --abort-on-container-exit --remove-orphans",
     "build": "pnpm turbo build",
     "dev": "pnpm turbo dev",
     "start": "pnpm turbo start"

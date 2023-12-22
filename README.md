@@ -6,7 +6,8 @@
 - *packages/config-server* validates and provides type-safe interface for environment variables. This can only ever be used on the server to avoid leaking sensitive data.
 - *packages/constant* contains values that are re-used multiple times, but do not change often and can not be environment variables.
 - *packages/db* contains database schema and client management.
-- *packages/transcode* video transcoding logic using `ffmpeg`.
+- *packages/scripts* has general scripts for project management.
+- *packages/queue* is a bullmq for video transcoding using `ffmpeg`.
 - *packages/web* is the Next.js server.
 
 

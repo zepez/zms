@@ -15,3 +15,7 @@ export const ensureDataPath = (filePath: string) => {
   const dataPath = getDataPath(filePath);
   fs.mkdirSync(dataPath, { recursive: true });
 };
+
+export const ensurePath = (filePath: string) => {
+  fs.mkdirSync(filePath, { recursive: true });
+};

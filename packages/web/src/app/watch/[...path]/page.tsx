@@ -5,14 +5,10 @@ interface Props {
 }
 
 export default function Page({ params }: Props) {
-  const { type, path } = params;
+  const { path } = params;
 
   return (
-    <Video.Provider
-      src={`http://localhost:3000/api/stream/${type}/_${path.join(
-        "/",
-      )}/master.m3u8`}
-    >
+    <Video.Provider src={`/api/stream/${path.join("/")}/playlist.m3u8`}>
       <Video.Player />
     </Video.Provider>
   );
