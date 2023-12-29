@@ -153,4 +153,52 @@ export default class File {
 
     fs.writeFile(metaPath, metaData);
   }
+
+  screenshotVideo(opts: {
+    name: string;
+    progress: number;
+    width: number;
+    height: number;
+  }) {
+    const { duration } = this?.ffProbeData?.format ?? {};
+    const { width, height } = this.getAVStream("video") ?? {};
+
+    if (!duration || !width || !height) return;
+
+    const x = (width - opts.width) / 2;
+    const y = (height - opts.height) / 2;
+
+    const posterOutputFilePath = path.join(this.getOutputDirPath(), opts.name);
+
+    ffmpeg(this.inputFilePath)
+      .seekInput(duration * opts.progress)
+      .outputOptions([
+        `-vf crop=${opts.width}:${opts.height}:${x}:${y}`,
+        "-frames:v 1",
+      ])
+      .output(posterOutputFilePath)
+      .on("end", () => console.log("Poster image saved"))
+      .on("error", (err) =>
+        console.error("Could not save poster image: " + err.message),
+      )
+      .run();
+  }
+
+  dumpPosterImage() {
+    this.screenshotVideo({
+      name: "poster.jpg",
+      progress: 0.4,
+      width: 1280,
+      height: 1920,
+    });
+  }
+
+  dumpBackdropImage() {
+    this.screenshotVideo({
+      name: "backdrop.jpg",
+      progress: 0.5,
+      width: 1920,
+      height: 1080,
+    });
+  }
 }

@@ -12,6 +12,8 @@ const provision = async (path: string) => {
 
   const hash = file.getHash();
   file.dumpMetadata();
+  file.dumpPosterImage();
+  file.dumpBackdropImage();
 
   await insertMedia({
     id: hash,
