@@ -11,6 +11,8 @@
   "dependencies": {
     "@packages/common": "workspace:*",
     "@packages/config-server": "workspace:*",
+    "@packages/validation": "workspace:*",
+    "@packages/query": "workspace:*",
     "bullmq": "^4.17.0",
     "chokidar": "^3.5.3",
     "fluent-ffmpeg": "^2.1.2",

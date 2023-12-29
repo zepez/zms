@@ -1,3 +1,4 @@
+import process from "process";
 import fs from "fs";
 import path from "path";
 import ffmpeg from "fluent-ffmpeg";
@@ -47,6 +48,10 @@ export const hls = async (opts: TranscodeJobData) => {
     if (preset.immediate) {
       addToParentPlaylist(parentPlaylistFilePath, preset);
     }
+
+    const tempDirPath = path.join(opts.outputDirPath, "tmp");
+    ensurePath(tempDirPath);
+    process.chdir(tempDirPath);
 
     const transcodingProcess = ffmpeg(opts.inputFilePath)
       .outputOptions([

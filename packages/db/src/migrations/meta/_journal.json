@@ -8,6 +8,20 @@
       "when": 1703028072606,
       "tag": "0000_late_venus",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1703658030223,
+      "tag": "0001_past_kang",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1703829087773,
+      "tag": "0002_strange_stardust",
+      "breakpoints": true
     }
   ]
 }

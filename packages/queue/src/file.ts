@@ -4,7 +4,7 @@ import path from "path";
 import type { Stats } from "fs";
 import ffmpeg, { type FfprobeData } from "fluent-ffmpeg";
 import { getDataPath, ensurePath } from "@packages/common";
-import * as validate from "./validation";
+import * as validate from "@packages/validation";
 
 export default class File {
   inputFilePath: string;
@@ -122,7 +122,6 @@ export default class File {
 
   getMetadata() {
     return {
-      path: this.inputFilePath,
       name: this.name,
       ...this.av,
       ...this.audio,
