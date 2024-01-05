@@ -8,7 +8,8 @@ const sqlite = new Database(dbPath);
 
 export const db = drizzle(sqlite, {
   schema,
-  logger: true,
+  logger: false,
 });
 
 export * as schema from "./schema";
+export * from "./qs";

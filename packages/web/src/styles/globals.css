@@ -4,48 +4,48 @@
  
 @layer base {
   :root {
-    --background: 100% 0% 90%; /* done */
-    --foreground: 14% 1% 286%; /* done */
-    --card: 100% 0% 90%; /* done */
-    --card-foreground: 14% 1% 286%; /* done */
-    --popover: 100% 0% 90%; /* done */
-    --popover-foreground: 14% 1% 286%; /* done */
-    --primary: 62.7% 42.5% 150%; /* done */
-    --primary-foreground: 97% 3.8% 12.4%; /* done */
-    --secondary: 96.7% 0.25% 286.4%; /* done */
-    --secondary-foreground: 21% 1.5% 286%; /* done */
-    --muted: 96.7% 0.25% 286.4%; /* done */
-    --muted-foreground: 55.2% 3.5% 286%; /* done */
-    --accent: 96.7% 0.25% 286.4%; /* done */
-    --accent-foreground: 21% 1.5% 286%; /* done */
-    --destructive: 63.7% 52% 25.3%; /* done */
-    --destructive-foreground: 98.5% 0% 90%; /* done */
-    --border: 92% 1% 286.3%; /* done */
-    --input: 92% 1% 286.3%; /* done */
-    --ring: 62.7% 42.5% 150%; /* done */
+    --background: 100% 0% 90; 
+    --foreground: 14% 1% 286; 
+    --card: 100% 0% 90; 
+    --card-foreground: 14% 1% 286; 
+    --popover: 100% 0% 90; 
+    --popover-foreground: 14% 1% 286; 
+    --primary: 62.7% 42.5% 150; 
+    --primary-foreground: 97% 3.8% 12.4; 
+    --secondary: 96.7% 0.25% 286.4; 
+    --secondary-foreground: 21% 1.5% 286; 
+    --muted: 96.7% 0.25% 286.4; 
+    --muted-foreground: 55.2% 3.5% 286; 
+    --accent: 96.7% 0.25% 286.4; 
+    --accent-foreground: 21% 1.5% 286; 
+    --destructive: 63.7% 52% 25.3; 
+    --destructive-foreground: 98.5% 0% 90; 
+    --border: 92% 1% 286.3; 
+    --input: 92% 1% 286.3; 
+    --ring: 62.7% 42.5% 150; 
     --radius: 0.5rem;
   }
  
   .dark {
-    --background: 14.7% 1% 50%; /* done */
-    --foreground: 96% 0% 90%; /* done */
-    --card: 21.6% 1.5% 56%; /* done */
-    --card-foreground: 96% 0% 90%; /* done */
-    --popover: 20.5% 0% 90%; /* done */
-    --popover-foreground: 96% 0% 90%; /* done */
-    --primary: 72.3% 48% 150%; /* done */
-    --primary-foreground: 26.6% 15.75% 153%; /* done */
-    --secondary: 27.4% 1.3% 286%; /* done */
-    --secondary-foreground: 98.5% 0% 90%; /* done */
-    --muted: 27% 0% 90%; /* done */
-    --muted-foreground: 71.2% 3.3% 286%; /* done */
-    --accent: 26.8% 1.5% 34.3%; /* done */
-    --accent-foreground: 98.5% 0% 90%; /* done */
-    --destructive: 40% 33.3% 25.7%; /* done */
-    --destructive-foreground: 97% 3.3% 17.4%; /* done */
-    --border: 27.4% 1.3% 286%; /* done */
-    --input: 27.4% 1.3% 286%; /* done */
-    --ring: 52.7% 34.3% 150%; /* done */
+    --background: 14.7% 1% 50; 
+    --foreground: 96% 0% 90; 
+    --card: 21.6% 1.5% 56; 
+    --card-foreground: 96% 0% 90; 
+    --popover: 20.5% 0% 90; 
+    --popover-foreground: 96% 0% 90; 
+    --primary: 72.3% 48% 150; 
+    --primary-foreground: 26.6% 15.75% 153; 
+    --secondary: 50% 1.3% 286; 
+    --secondary-foreground: 98.5% 0% 90; 
+    --muted: 27% 0% 90; 
+    --muted-foreground: 71.2% 3.3% 286; 
+    --accent: 26.8% 1.5% 34.3; 
+    --accent-foreground: 98.5% 0% 90; 
+    --destructive: 40% 33.3% 25.7; 
+    --destructive-foreground: 97% 3.3% 17.4; 
+    --border: 50% 1.3% 286; 
+    --input: 50% 1.3% 286; 
+    --ring: 52.7% 34.3% 150; 
   }
 }
  
@@ -74,4 +74,8 @@
     border-radius: 50%;
     z-index: 10;
   }
+}
+
+.loading {
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle fill="none" stroke-opacity="1" stroke="%23FFFFFF" stroke-width=".5" cx="100" cy="100" r="0"><animate attributeName="r" calcMode="spline" dur="2" values="1;80" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate><animate attributeName="stroke-width" calcMode="spline" dur="2" values="0;25" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate><animate attributeName="stroke-opacity" calcMode="spline" dur="2" values="1;0" keyTimes="0;1" keySplines="0 .2 .5 1" repeatCount="indefinite"></animate></circle></svg>');
 }

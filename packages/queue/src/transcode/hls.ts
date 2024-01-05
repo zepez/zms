@@ -56,13 +56,14 @@ export const hls = async (opts: TranscodeJobData) => {
     const transcodingProcess = ffmpeg(opts.inputFilePath)
       .outputOptions([
         "-profile:v baseline",
-        "-level 3.0",
         `-s ${preset.resolution}`,
+        `-b:v ${preset.bandwidth / 1000}k`,
         "-sc_threshold 0",
         "-start_number 0",
         `-hls_time ${opts.segmentDuration}`,
         "-hls_list_size 0",
         "-f hls",
+        "-loglevel debug",
       ])
       .output(resolutionOutPlaylistFilePath);
 
@@ -85,6 +86,7 @@ export const hls = async (opts: TranscodeJobData) => {
     transcodingProcess.on("error", (err) => {
       transcodingProcesses.delete(opts.id);
 
+      console.error(err);
       reject(new Error(err.message));
     });
 

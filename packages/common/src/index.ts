@@ -1,12 +1,11 @@
 import path from "path";
 import fs from "fs";
-import config from "@packages/config-server";
+import { fileURLToPath } from "url";
 
 export const getDataPath = (relativePath: string): string => {
-  const projectRoot = !config.FLAG_NEXT_BUNDLE
-    ? path.resolve(__dirname, "../../..")
-    : path.resolve(__dirname, "../../../../../../../..");
-  const dataPath = path.join(projectRoot, "data", relativePath);
+  const currentFile = fileURLToPath(import.meta.url);
+  const currentDir = path.dirname(currentFile);
+  const dataPath = path.join(currentDir, "../../../data", relativePath);
 
   return dataPath;
 };

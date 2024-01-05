@@ -1,5 +1,3 @@
-import { RefreshCcw } from "lucide-react";
-
 interface Props {
   message: string;
 }
@@ -7,7 +5,7 @@ interface Props {
 export const Loading = ({ message }: Props) => {
   return (
     <div className="flex flex-col items-center gap-4">
-      <RefreshCcw size={140} className="animate-spin" />
+      <div className="loading w-64 h-64" />
       <h1 className="text-5xl pt-4">{message}</h1>
     </div>
   );

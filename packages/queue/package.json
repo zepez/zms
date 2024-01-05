@@ -11,6 +11,8 @@
   "dependencies": {
     "@packages/common": "workspace:*",
     "@packages/config-server": "workspace:*",
+    "@packages/constant": "workspace:*",
+    "@packages/db": "workspace:*",
     "@packages/validation": "workspace:*",
     "@packages/query": "workspace:*",
     "bullmq": "^4.17.0",

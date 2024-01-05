@@ -2,12 +2,18 @@ export const presets = [
   {
     name: "144p",
     resolution: "256x144",
-    bandwidth: 80000,
+    bandwidth: 400000,
     immediate: true,
   },
   {
+    name: "360p",
+    resolution: "640x360",
+    bandwidth: 800000,
+    immediate: false,
+  },
+  {
     name: "480p",
-    resolution: "640x480",
+    resolution: "854x480",
     bandwidth: 1200000,
     immediate: false,
   },
