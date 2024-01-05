@@ -1,5 +1,6 @@
 import chokidar from "chokidar";
 import { getDataPath } from "@packages/common";
+import { insertMedia } from "@packages/query";
 import File from "./file";
 import * as qs from "./qs";
 import * as transcode from "./transcode";
@@ -11,6 +12,13 @@ const provision = async (path: string) => {
 
   const hash = file.getHash();
   file.dumpMetadata();
+  file.dumpPosterImage();
+  file.dumpBackdropImage();
+
+  await insertMedia({
+    id: hash,
+    ...file.getMetadata(),
+  });
 
   const selectedPresets = transcode.presets.filter((preset) => {
     const [, presetHeight = 0] = preset.resolution.split("x").map(Number);
