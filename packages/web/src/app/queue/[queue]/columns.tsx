@@ -19,10 +19,12 @@ export const columns: ColumnDef<NonNullable<GetQueueJobsReturn[1]>[0]>[] = [
     cell: ({ row }) => (
       <span>{row.getIsExpanded() ? <ChevronDown /> : <ChevronRight />}</span>
     ),
+    enableColumnFilter: false,
   },
   {
     accessorKey: "type",
     header: "Job Type",
+    enableColumnFilter: false,
   },
   {
     accessorKey: "id",
@@ -42,6 +44,7 @@ export const columns: ColumnDef<NonNullable<GetQueueJobsReturn[1]>[0]>[] = [
     accessorKey: "timestamp",
     header: "Added to Queue",
     cell: TimestampCell,
+    enableColumnFilter: false,
   },
   {
     accessorKey: "status",
