@@ -12,7 +12,7 @@ export type TranscodeJobData = {
   };
 };
 
-export type MoveFileJobData = {
+export type FinishIngestJobData = {
   inputFilePath: string;
   outputFilePath: string;
 };

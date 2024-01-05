@@ -1,10 +1,12 @@
 import chokidar from "chokidar";
 import { getDataPath } from "@packages/common";
+import { TRANSCODE_SEGMENT_DURATION, QUEUE_NAMES } from "@packages/constant";
 import { insertMedia } from "@packages/query";
+import { qs } from "@packages/db";
 import File from "./file";
-import * as qs from "./qs";
+import workers from "./workers";
 import * as transcode from "./transcode";
-import type { TranscodeJobData, MoveFileJobData } from "./types";
+import type { TranscodeJobData, FinishIngestJobData } from "./types";
 
 const provision = async (path: string) => {
   console.log("New file detected:", path);
@@ -29,11 +31,11 @@ const provision = async (path: string) => {
 
   await qs.flow.add({
     name: `${hash}:${file.name}`,
-    queueName: "move-file-queue",
+    queueName: QUEUE_NAMES.FINISH,
     data: {
       inputFilePath: file.inputFilePath,
       outputFilePath: file.getOutputFilePath(),
-    } as MoveFileJobData,
+    } as FinishIngestJobData,
     children: selectedPresets.map((preset) => {
       return {
         name: `${hash}:${file.name}:${preset.name}`,
@@ -42,10 +44,10 @@ const provision = async (path: string) => {
           name: file.name,
           inputFilePath: file.inputFilePath,
           outputDirPath: file.getOutputDirPath(),
-          segmentDuration: 3,
+          segmentDuration: TRANSCODE_SEGMENT_DURATION,
           preset,
         } as TranscodeJobData,
-        queueName: "transcode-queue",
+        queueName: QUEUE_NAMES.TRANSCODE,
       };
     }),
   });
@@ -66,7 +68,7 @@ const gracefulShutdown = async () => {
   transcode.sendFfmpegSignal("SIGTERM");
 
   console.log("Stopping transcode queue worker...");
-  await qs.transcode.worker.close();
+  await workers.transcode.close();
 
   console.log("All tasks completed. Exiting...");
   process.exit(0);

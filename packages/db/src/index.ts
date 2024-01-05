@@ -12,3 +12,4 @@ export const db = drizzle(sqlite, {
 });
 
 export * as schema from "./schema";
+export * from "./qs";

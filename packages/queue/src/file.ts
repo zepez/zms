@@ -4,6 +4,7 @@ import path from "path";
 import type { Stats } from "fs";
 import ffmpeg, { type FfprobeData } from "fluent-ffmpeg";
 import { getDataPath, ensurePath } from "@packages/common";
+import * as constants from "@packages/constant";
 import * as validate from "@packages/validation";
 
 export default class File {
@@ -168,7 +169,7 @@ export default class File {
     const x = (width - opts.width) / 2;
     const y = (height - opts.height) / 2;
 
-    const posterOutputFilePath = path.join(this.getOutputDirPath(), opts.name);
+    const outputFilePath = path.join(this.getOutputDirPath(), opts.name);
 
     ffmpeg(this.inputFilePath)
       .seekInput(duration * opts.progress)
@@ -176,17 +177,17 @@ export default class File {
         `-vf crop=${opts.width}:${opts.height}:${x}:${y}`,
         "-frames:v 1",
       ])
-      .output(posterOutputFilePath)
-      .on("end", () => console.log("Poster image saved"))
+      .output(outputFilePath)
+      .on("end", () => console.log(`${opts.name} saved`))
       .on("error", (err) =>
-        console.error("Could not save poster image: " + err.message),
+        console.error(`Could not save ${opts.name}: ${err.message}`),
       )
       .run();
   }
 
   dumpPosterImage() {
     this.screenshotVideo({
-      name: "poster.jpg",
+      name: constants.MEDIA_POSTER_NAME,
       progress: 0.4,
       width: 1280,
       height: 1920,
@@ -195,7 +196,7 @@ export default class File {
 
   dumpBackdropImage() {
     this.screenshotVideo({
-      name: "backdrop.jpg",
+      name: constants.MEDIA_BACKDROP_NAME,
       progress: 0.5,
       width: 1920,
       height: 1080,
