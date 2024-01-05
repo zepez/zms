@@ -18,7 +18,7 @@ export const Controls = () => {
   return (
     <div
       onClick={toggleMediaPaused}
-      className="absolute bottom-0 left-0 z-10 h-full w-full transition-opacity duration-500 ease-in-out"
+      className="text-white absolute bottom-0 left-0 z-10 h-full w-full transition-opacity duration-500 ease-in-out"
       style={{
         backgroundImage: `linear-gradient(0deg, black 0%, black 5%, transparent 55%), linear-gradient(180deg, black 0%, black 5%, transparent 55%)`,
         opacity: isPlayerActive ? 1 : 0,

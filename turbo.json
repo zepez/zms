@@ -6,15 +6,15 @@
       "persistent": false
     },
     "script:scaffold": {
-      "cache": true,
+      "cache": false,
       "persistent": false
     },
     "db:create": {
-      "cache": true,
+      "cache": false,
       "persistent": false
     },
     "db:migrate": {
-      "cache": true,
+      "cache": false,
       "persistent": false,
       "dependsOn": ["db:create"]
     },

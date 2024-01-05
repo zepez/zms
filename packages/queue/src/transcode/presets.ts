@@ -2,7 +2,7 @@ export const presets = [
   {
     name: "144p",
     resolution: "256x144",
-    bandwidth: 40000,
+    bandwidth: 400000,
     immediate: true,
   },
   {
@@ -20,13 +20,13 @@ export const presets = [
   {
     name: "720p",
     resolution: "1280x720",
-    bandwidth: 1900000,
+    bandwidth: 2800000,
     immediate: false,
   },
   {
     name: "1080p",
     resolution: "1920x1080",
-    bandwidth: 4500000,
+    bandwidth: 5000000,
     immediate: false,
   },
   {

@@ -1,6 +1,6 @@
 import { FlowProducer } from "bullmq";
 import config from "@packages/config-server";
-import { finishIngest } from "./finish-ingest";
+import { ingest } from "./ingest";
 import { transcode } from "./transcode";
 
 const flow = new FlowProducer({
@@ -12,6 +12,6 @@ const flow = new FlowProducer({
 
 export const qs = {
   flow,
-  finishIngest,
+  ingest,
   transcode,
 };

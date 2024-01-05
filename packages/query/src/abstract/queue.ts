@@ -10,7 +10,7 @@ export const getQueueJobs = async (opts: GetQueueJobsOptions) => {
   try {
     const parsed = z
       .object({
-        queue: z.enum(["finishIngest", "transcode"]),
+        queue: z.enum(["ingest", "transcode"]),
         statuses: z.array(
           z.enum([
             "completed",
@@ -32,8 +32,17 @@ export const getQueueJobs = async (opts: GetQueueJobsOptions) => {
     const resolveJobsData = () =>
       rawJobsData.map(async (job) => {
         return {
-          ...job,
+          type: parsed.queue,
+          id: job.id,
+          name: job.name,
+          timestamp: job.timestamp,
+          attemptsMade: job.attemptsMade,
+          finishedOn: job.finishedOn,
+          failedReason: job.failedReason,
+          stacktrace: job.stacktrace,
+          returnedValue: job.returnvalue,
           status: await job.getState(),
+          data: job.data,
         };
       });
 

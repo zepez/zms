@@ -1,8 +1,8 @@
-import { finishIngest } from "./finish-ingest";
+import { ingest } from "./ingest";
 import { transcode } from "./transcode";
 
 const workers = {
-  finishIngest,
+  ingest,
   transcode,
 };
 

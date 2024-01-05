@@ -8,5 +8,5 @@ export const MEDIA_BACKDROP_NAME = "backdrop.jpg";
 // Queues:
 export enum QUEUE_NAMES {
   TRANSCODE = "transcode-queue",
-  FINISH = "finish-ingest-queue",
+  INGEST = "ingest-queue",
 }

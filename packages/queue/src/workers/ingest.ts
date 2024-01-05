@@ -2,12 +2,12 @@ import fs from "fs/promises";
 import { Worker } from "bullmq";
 import config from "@packages/config-server";
 import { QUEUE_NAMES } from "@packages/constant";
-import type { FinishIngestJobData } from "../types";
+import type { IngestJobData } from "../types";
 
-export const finishIngest = new Worker(
-  QUEUE_NAMES.FINISH,
+export const ingest = new Worker(
+  QUEUE_NAMES.INGEST,
   async (job) => {
-    const { inputFilePath, outputFilePath } = job.data as FinishIngestJobData;
+    const { inputFilePath, outputFilePath } = job.data as IngestJobData;
 
     try {
       await fs.rename(inputFilePath, outputFilePath);

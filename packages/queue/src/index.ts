@@ -6,7 +6,7 @@ import { qs } from "@packages/db";
 import File from "./file";
 import workers from "./workers";
 import * as transcode from "./transcode";
-import type { TranscodeJobData, FinishIngestJobData } from "./types";
+import type { TranscodeJobData, IngestJobData } from "./types";
 
 const provision = async (path: string) => {
   console.log("New file detected:", path);
@@ -31,11 +31,11 @@ const provision = async (path: string) => {
 
   await qs.flow.add({
     name: `${hash}:${file.name}`,
-    queueName: QUEUE_NAMES.FINISH,
+    queueName: QUEUE_NAMES.INGEST,
     data: {
       inputFilePath: file.inputFilePath,
       outputFilePath: file.getOutputFilePath(),
-    } as FinishIngestJobData,
+    } as IngestJobData,
     children: selectedPresets.map((preset) => {
       return {
         name: `${hash}:${file.name}:${preset.name}`,

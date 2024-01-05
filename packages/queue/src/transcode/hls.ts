@@ -57,6 +57,7 @@ export const hls = async (opts: TranscodeJobData) => {
       .outputOptions([
         "-profile:v baseline",
         `-s ${preset.resolution}`,
+        `-b:v ${preset.bandwidth / 1000}k`,
         "-sc_threshold 0",
         "-start_number 0",
         `-hls_time ${opts.segmentDuration}`,
