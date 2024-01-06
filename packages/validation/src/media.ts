@@ -25,12 +25,11 @@ export const video = z.object({
 });
 
 export type Media = z.infer<typeof media>;
-export const media = av
-  .merge(audio)
+export const media = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+  })
+  .merge(av)
   .merge(video)
-  .and(
-    z.object({
-      id: z.string(),
-      name: z.string(),
-    }),
-  );
+  .merge(audio);

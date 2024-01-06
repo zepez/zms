@@ -1,33 +1,34 @@
 import chokidar from "chokidar";
+import mime from "mime";
 import { getDataPath } from "@packages/common";
 import { TRANSCODE_SEGMENT_DURATION, QUEUE_NAMES } from "@packages/constant";
 import { insertMedia } from "@packages/query";
 import { qs } from "@packages/db";
-import File from "./file";
+import * as files from "./file";
 import workers from "./workers";
 import * as transcode from "./transcode";
 import type { TranscodeJobData, IngestJobData } from "./types";
 
 const provision = async (path: string) => {
   console.log("New file detected:", path);
-  const file = await new File(path).init();
+  const mimetype = mime.getType(path);
+  const type = mimetype?.split("/")[0] ?? null;
 
+  if (!type) throw new Error("Unable to parse file type");
+
+  const file = await files.provision(path, type);
   const hash = file.getHash();
-  file.dumpMetadata();
-  file.dumpPosterImage();
-  file.dumpBackdropImage();
+
+  await file.writeMetadata();
+  await file.writePosterImage();
+  await file.writeBackdropImage();
 
   await insertMedia({
     id: hash,
     ...file.getMetadata(),
   });
 
-  const selectedPresets = transcode.presets.filter((preset) => {
-    const [, presetHeight = 0] = preset.resolution.split("x").map(Number);
-    const videoHeight = file.video.video_height || 0;
-
-    return presetHeight <= videoHeight;
-  });
+  const presets = transcode.presets.determine(file);
 
   await qs.flow.add({
     name: `${hash}:${file.name}`,
@@ -36,10 +37,11 @@ const provision = async (path: string) => {
       inputFilePath: file.inputFilePath,
       outputFilePath: file.getOutputFilePath(),
     } as IngestJobData,
-    children: selectedPresets.map((preset) => {
+    children: presets.map((preset) => {
       return {
         name: `${hash}:${file.name}:${preset.name}`,
         data: {
+          type,
           id: hash,
           name: file.name,
           inputFilePath: file.inputFilePath,

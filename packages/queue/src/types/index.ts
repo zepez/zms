@@ -1,4 +1,5 @@
 export type TranscodeJobData = {
+  type: "audio" | "video";
   id: string;
   name: string;
   inputFilePath: string;
@@ -6,7 +7,7 @@ export type TranscodeJobData = {
   segmentDuration: number;
   preset: {
     name: string;
-    resolution: string;
+    resolution: string | null;
     bandwidth: number;
     immediate: boolean;
   };

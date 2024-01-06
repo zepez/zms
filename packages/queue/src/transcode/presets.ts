@@ -1,4 +1,23 @@
-export const presets = [
+import { VideoFile, AudioFile } from "../file";
+
+export const determine = (file: VideoFile | AudioFile) => {
+  switch (file.constructor) {
+    case VideoFile:
+      return video.filter((preset) => {
+        const [, presetHeight = 0] = preset.resolution.split("x").map(Number);
+        const videoHeight = file.video.video_height || 0;
+
+        return presetHeight <= videoHeight;
+      });
+    case AudioFile:
+      return audio;
+    default: {
+      throw new Error("Unsupported file type");
+    }
+  }
+};
+
+export const video = [
   {
     name: "144p",
     resolution: "256x144",
@@ -34,5 +53,14 @@ export const presets = [
     resolution: "3840x2160",
     bandwidth: 14000000,
     immediate: false,
+  },
+];
+
+export const audio = [
+  {
+    name: "320kbps",
+    resolution: null,
+    bandwidth: 320000,
+    immediate: true,
   },
 ];

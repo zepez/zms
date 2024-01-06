@@ -1,2 +1,2 @@
 export * from "./hls";
-export * from "./presets";
+export * as presets from "./presets";
